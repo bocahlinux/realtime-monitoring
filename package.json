@@ -1,18 +1,30 @@
 {
-    "name": "laporan-pajak",
+    "name": "esamsat-kalteng-realtime",
     "version": "1.0.0",
-    "description": "Laporan realisasi pajak daerah harian",
+    "description": "Realtime monitoring dashboard untuk e-Samsat Kalteng — menampilkan laporan penerimaan PKB, BBNKB, dan SWDKLLJ langsung terhubung dengan Supabase self-host.",
     "type": "module",
     "main": "app.js",
     "scripts": {
         "start": "node app.js",
         "dev": "nodemon app.js"
     },
+    "keywords": [
+        "supabase",
+        "realtime",
+        "dashboard",
+        "nodejs",
+        "esamsat",
+        "bapenda",
+        "kalteng"
+    ],
+    "author": "PT Yuk Code Creative",
+    "license": "Private",
     "dependencies": {
+        "express": "^4.19.2",
         "ejs": "^3.1.10",
-        "express": "^4.21.2"
+        "@supabase/supabase-js": "^2.45.1"
     },
     "devDependencies": {
-        "nodemon": "^3.1.10"
+        "nodemon": "^3.1.3"
     }
 }
