@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <%- include('partials/head', { title: title }) %>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <div class="flex">
+      <%- include('partials/sidebar') %>
+
+      <div class="flex-1 flex flex-col">
+        <%- include('partials/navbar', { title: title }) %>
+
+        <main class="flex-1 p-6 space-y-6">
+            <!-- Status koneksi realtime -->
+            <div id="rt-status" class="hidden px-4 py-2 rounded text-sm"></div>
+
+            <!-- Rekap Harian -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white p-4 rounded-lg shadow text-center">
+                    <h3 class="text-gray-500 text-sm">Pokok BBNKB</h3>
+                    <p id="pokok-bbnkb" class="text-xl font-semibold text-blue-600">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow text-center">
+                    <h3 class="text-gray-500 text-sm">Denda BBNKB</h3>
+                    <p id="denda-bbnkb" class="text-xl font-semibold text-blue-600">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow text-center">
+                    <h3 class="text-gray-500 text-sm">Pokok PKB Berjalan</h3>
+                    <p id="pokok-pkb-berjalan" class="text-xl font-semibold text-blue-600">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow text-center">
+                    <h3 class="text-gray-500 text-sm">Denda PKB Berjalan</h3>
+                    <p id="denda-pkb-berjalan" class="text-xl font-semibold text-indigo-600">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow text-center">
+                    <h3 class="text-gray-500 text-sm">Pokok PKB Tertunggak</h3>
+                    <p id="pokok-pkb-tertunggak" class="text-xl font-semibold text-blue-600">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow text-center">
+                    <h3 class="text-gray-500 text-sm">Denda PKB Tertunggak</h3>
+                    <p id="denda-pkb-tertunggak" class="text-xl font-semibold text-indigo-600">0</p>
+                </div>
+            </div>
+
+            <!-- Filter ringkas (hari ini / kemarin / 3 hari) -->
+            <div class="flex items-center gap-3">
+                <label class="text-sm text-gray-600">Rentang:</label>
+                <select id="range" class="border rounded px-2 py-1 text-sm">
+                <option value="today" selected>Hari ini</option>
+                <option value="yesterday">Kemarin</option>
+                <option value="last3">3 Hari terakhir</option>
+                </select>
+            </div>
+
+            <!-- Tabel Data -->
+            <div class="overflow-x-auto bg-white shadow rounded-lg p-4">
+                <table id="data-table" class="min-w-full text-sm border-collapse border border-slate-200">
+                    <thead class="bg-blue-600 text-white">
+                    <tr>
+                        <th class="p-2 text-left" rowspan="2">No Polisi</th>
+                        <th class="p-2 text-left" rowspan="2">Nama WP</th>
+                        <th class="p-2 text-left" rowspan="2">Tanggal</th>
+                        <th class="p-2 text-center" colspan="2">BBNKB</th>
+                        <th class="p-2 text-center" colspan="2">PKB Berjalan</th>
+                        <th class="p-2 text-center" colspan="2">PKB Tertunggak</th>
+                        <th class="p-2 text-center" rowspan="2">Online</th>
+                    </tr>
+                    <tr>
+                        <th class="p-2 text-right">Pokok</th>
+                        <th class="p-2 text-right">Denda</th>
+
+                        <th class="p-2 text-right">Pokok</th>
+                        <th class="p-2 text-right">Denda</th>
+                        <th class="p-2 text-right">Pokok</th>
+                        <th class="p-2 text-right">Denda</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="/js/supabase-realtime.js"></script>
+  </body>
+</html>
