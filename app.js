@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -6,7 +9,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = 3001;
 
 // Set EJS sebagai template engine
 app.set("view engine", "ejs");
@@ -54,8 +56,17 @@ app.get("/api/data", (req, res) => {
   res.json(data);
 });
 
+app.get("/config/supabase.json", (req, res) => {
+    res.set("Cache-Control", "public, max-age=60");
+    res.json({
+        SUPABASE_URL: process.env.SUPABASE_URL,
+        SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+    });
+});
+
+
 app.use(express.static("public"));
 
-app.listen(port, () => {
-  console.log(`✅ Server berjalan di http://localhost:${port}`);
+app.listen(process.env.PORT, () => {
+  console.log(`✅ Server berjalan di http://localhost:${process.env.PORT || port}`);
 });

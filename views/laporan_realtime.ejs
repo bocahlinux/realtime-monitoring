@@ -3,6 +3,7 @@
   <head>
     <%- include('partials/head', { title: title }) %>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
   </head>
   <body class="bg-gray-50 min-h-screen">
     <div class="flex">
@@ -10,36 +11,66 @@
 
       <div class="flex-1 flex flex-col">
         <%- include('partials/navbar', { title: title }) %>
-
         <main class="flex-1 p-6 space-y-6">
             <!-- Status koneksi realtime -->
-            <div id="rt-status" class="hidden px-4 py-2 rounded text-sm"></div>
 
             <!-- Rekap Harian -->
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
                 <div class="bg-white p-4 rounded-lg shadow text-center">
-                    <h3 class="text-gray-500 text-sm">Pokok BBNKB</h3>
+                    <div class="flex items-center justify-center gap-2 text-gray-500 text-sm">
+                    <i data-lucide="car"></i>
+                    <span>Pokok BBNKB</span>
+                    </div>
                     <p id="pokok-bbnkb" class="text-xl font-semibold text-blue-600">0</p>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow text-center">
-                    <h3 class="text-gray-500 text-sm">Denda BBNKB</h3>
+                    <div class="flex items-center justify-center gap-2 text-gray-500 text-sm">
+                    <i data-lucide="alert-octagon"></i>
+                    <span>Denda BBNKB</span>
+                    </div>
                     <p id="denda-bbnkb" class="text-xl font-semibold text-blue-600">0</p>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow text-center">
-                    <h3 class="text-gray-500 text-sm">Pokok PKB Berjalan</h3>
+                    <div class="flex items-center justify-center gap-2 text-gray-500 text-sm">
+                    <i data-lucide="truck"></i>
+                    <span>Pokok PKB Berjalan</span>
+                    </div>
                     <p id="pokok-pkb-berjalan" class="text-xl font-semibold text-blue-600">0</p>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow text-center">
-                    <h3 class="text-gray-500 text-sm">Denda PKB Berjalan</h3>
+                    <div class="flex items-center justify-center gap-2 text-gray-500 text-sm">
+                    <i data-lucide="clock"></i>
+                    <span>Denda PKB Berjalan</span>
+                    </div>
                     <p id="denda-pkb-berjalan" class="text-xl font-semibold text-indigo-600">0</p>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow text-center">
-                    <h3 class="text-gray-500 text-sm">Pokok PKB Tertunggak</h3>
+                    <div class="flex items-center justify-center gap-2 text-gray-500 text-sm">
+                    <i data-lucide="archive"></i>
+                    <span>Pokok PKB Tertunggak</span>
+                    </div>
                     <p id="pokok-pkb-tertunggak" class="text-xl font-semibold text-blue-600">0</p>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow text-center">
-                    <h3 class="text-gray-500 text-sm">Denda PKB Tertunggak</h3>
+                    <div class="flex items-center justify-center gap-2 text-gray-500 text-sm">
+                    <i data-lucide="alert-circle"></i>
+                    <span>Denda PKB Tertunggak</span>
+                    </div>
                     <p id="denda-pkb-tertunggak" class="text-xl font-semibold text-indigo-600">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow text-center">
+                    <div class="flex items-center justify-center gap-2 text-gray-500 text-sm">
+                    <i data-lucide="badge-check" class="text-green-500"></i>
+                    <span>Unit BBNKB</span>
+                    </div>
+                    <p id="unit-bbnkb" class="text-xl font-semibold text-indigo-600">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow text-center">
+                    <div class="flex items-center justify-center gap-2 text-gray-500 text-sm">
+                    <i data-lucide="users" class="text-green-500"></i>
+                    <span>Unit PKB</span>
+                    </div>
+                    <p id="unit-pkb" class="text-xl font-semibold text-indigo-600">0</p>
                 </div>
             </div>
 
@@ -82,7 +113,9 @@
         </main>
       </div>
     </div>
-
+    <script>
+        lucide.createIcons(); // aktifkan ikon lucide di seluruh halaman
+    </script>
     <script src="/js/supabase-realtime.js"></script>
   </body>
 </html>
