@@ -36,16 +36,10 @@ let data = [
 app.get("/", (req, res) => {
   res.render("laporan", {
     tanggal: new Date().toLocaleDateString("id-ID"),
-    data
+    data,
+    activePage: "dashboard",
   });
 });
-
-app.get("/laporan/realtime", (req, res) => {
-  res.render("laporan_realtime", {
-    title: "Laporan Transaksi Harian (Realtime)"
-  });
-});
-
 
 // API endpoint untuk update otomatis per hari
 app.get("/api/data", (req, res) => {
@@ -63,6 +57,42 @@ app.get("/config/supabase.json", (req, res) => {
         SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
     });
 });
+
+app.get("/laporan/realtime", (req, res) => {
+  res.render("laporan/laporan_realtime", {
+    title: "Laporan Transaksi Harian (Realtime)",
+    activePage: "realtime",
+  });
+});
+
+app.get("/laporan/rekap", (req, res) => {
+  const bulanNama = new Date().toLocaleString("id-ID", { month: "long" });
+  const tahun = new Date().getFullYear();
+  res.render("laporan/laporan_rekap", { bulanNama, tahun });
+});
+
+app.get("/laporan/rekap-bulanan", (req, res) => {
+  res.render("laporan/laporan_rekap_bulanan", {
+    title: "Laporan Rekap Bulanan e-Samsat",
+    activePage: "rekap-bulanan",
+  });
+});
+
+app.get("/transaksi/input-pap", (req, res) => {
+  res.render("transaksi/transaksi_pap", {
+    title: "Transaksi PAP",
+    activePage: "transaksi-pap",
+  });
+});
+
+app.get("/transaksi/input-pab", (req, res) => {
+  res.render("transaksi/transaksi_pab", {
+    title: "Transaksi PAB",
+    activePage: "transaksi-pab",
+  });
+});
+
+
 
 
 app.use(express.static("public"));

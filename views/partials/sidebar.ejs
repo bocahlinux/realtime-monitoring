@@ -12,7 +12,7 @@
       <li>
         <a
           href="/"
-          class="block px-5 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-700"
+          class="block px-5 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-700 <%= activePage === 'dashboard' ? 'sidebar-active bg-blue-100 text-blue-700 font-semibold' : '' %>"
         >
           🏠 Dashboard
         </a>
@@ -20,11 +20,32 @@
       <li>
         <a
           href="/laporan/realtime"
-          class="block px-5 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-700 sidebar-active"
+          class="block px-5 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-700 <%= activePage === 'realtime' ? 'sidebar-active bg-blue-100 text-blue-700 font-semibold' : '' %>"
         >
           📊 Laporan Realtime
         </a>
       </li>
+      <li>
+        <a
+          href="/laporan/rekap-bulanan"
+          class="block px-5 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-700 <%= activePage === 'rekap-bulanan' ? 'sidebar-active bg-blue-100 text-blue-700 font-semibold' : '' %>"
+        >
+          📊 Laporan Rekap
+        </a>
+      </li>
+      <li>
+        <a href="/transaksi/input-pap"
+          class="block px-5 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-700 <%= activePage === 'transaksi-pap' ? 'sidebar-active bg-blue-100 text-blue-700 font-semibold' : '' %>">
+          📘 Transaksi PAP
+        </a>
+      </li>
+      <li>
+        <a href="/transaksi/input-pab"
+          class="block px-5 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-700 <%= activePage === 'transaksi-pab' ? 'sidebar-active bg-blue-100 text-blue-700 font-semibold' : '' %>">
+          📗 Transaksi PAB
+        </a>
+      </li>
+
       <li>
         <a
           href="/pengaturan"

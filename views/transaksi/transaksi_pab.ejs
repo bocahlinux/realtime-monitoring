@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <%- include('../partials/head', { title: 'Input Transaksi PAB' }) %>
+</head>
+<body class="bg-gray-50">
+  <div class="flex">
+    <%- include('../partials/sidebar') %>
+
+    <main class="flex-1 p-6">
+      <h1 class="text-2xl font-bold mb-4 text-green-700">💰 Input Transaksi PAB</h1>
+
+      <div id="form-container"></div>
+      <div id="table-container" class="mt-6"></div>
+      <div id="modal-container"></div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="/js/pap_pab_manager.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => initPapPab('pab'));
+  </script>
+</body>
+</html>

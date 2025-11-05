@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <%- include('../partials/head', { title: 'Laporan Rekap Bulanan e-Samsat' }) %>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-50">
+  <div class="flex">
+    <%- include('../partials/sidebar') %>
+
+    <div class="flex-1 flex flex-col">
+      <%- include('../partials/navbar', { title: 'Laporan Rekap Bulanan e-Samsat' }) %>
+
+      <main class="flex-1 p-6 space-y-6">
+        <div class="flex items-center space-x-2 mb-4">
+          <label for="bulan" class="text-sm font-medium text-gray-700">Bulan:</label>
+          <select id="bulan" class="border rounded p-1 text-sm">
+            <% const bulanList = [
+              "Januari","Februari","Maret","April","Mei","Juni",
+              "Juli","Agustus","September","Oktober","November","Desember"
+            ]; %>
+            <% bulanList.forEach((b, i) => { %>
+              <option value="<%= i+1 %>" <%= (i === new Date().getMonth()) ? 'selected' : '' %>><%= b %></option>
+            <% }) %>
+          </select>
+
+          <label for="tahun" class="text-sm font-medium text-gray-700 ml-2">Tahun:</label>
+          <select id="tahun" class="border rounded p-1 text-sm">
+            <% for (let y = 2023; y <= new Date().getFullYear()+1; y++) { %>
+              <option value="<%= y %>" <%= (y === new Date().getFullYear()) ? 'selected' : '' %>><%= y %></option>
+            <% } %>
+          </select>
+
+          <button id="btn-load" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition">
+            Tampilkan
+          </button>
+        </div>
+
+        <div id="rekap-wrapper" class="space-y-6">
+          <p class="text-gray-500 text-sm">Silakan pilih bulan dan tahun, lalu klik <b>Tampilkan</b> untuk melihat laporan.</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/rekap-bulanan.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <%- include('partials/head', { title: 'Input Transaksi PAP & PAB' }) %>
+</head>
+<body class="bg-gray-50">
+  <div class="flex">
+    <%- include('partials/sidebar') %>
+
+    <main class="flex-1 p-6">
+      <h1 class="text-2xl font-bold mb-4 text-gray-700">🧾 Input Transaksi PAP & PAB</h1>
+      
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Form PAP -->
+        <form id="formPap" class="bg-white p-4 shadow rounded-lg">
+          <h2 class="font-semibold mb-3 text-blue-600">Input PAP</h2>
+          <label class="block text-sm font-medium mb-1">Tanggal</label>
+          <input type="date" id="papTanggal" class="border p-2 w-full mb-3 rounded" required>
+          
+          <label class="block text-sm font-medium mb-1">UPT Bayar</label>
+          <input type="text" id="papUpt" class="border p-2 w-full mb-3 rounded" value="PALANGKA RAYA" required>
+
+          <label class="block text-sm font-medium mb-1">Jumlah (Rp)</label>
+          <input type="number" id="papJumlah" class="border p-2 w-full mb-3 rounded" min="0" required>
+
+          <label class="block text-sm font-medium mb-1">Keterangan</label>
+          <textarea id="papKet" class="border p-2 w-full mb-3 rounded"></textarea>
+
+          <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Simpan PAP</button>
+        </form>
+
+        <!-- Form PAB -->
+        <form id="formPab" class="bg-white p-4 shadow rounded-lg">
+          <h2 class="font-semibold mb-3 text-green-600">Input PAB</h2>
+          <label class="block text-sm font-medium mb-1">Tanggal</label>
+          <input type="date" id="pabTanggal" class="border p-2 w-full mb-3 rounded" required>
+          
+          <label class="block text-sm font-medium mb-1">UPT Bayar</label>
+          <input type="text" id="pabUpt" class="border p-2 w-full mb-3 rounded" value="PALANGKA RAYA" required>
+
+          <label class="block text-sm font-medium mb-1">Jumlah (Rp)</label>
+          <input type="number" id="pabJumlah" class="border p-2 w-full mb-3 rounded" min="0" required>
+
+          <label class="block text-sm font-medium mb-1">Keterangan</label>
+          <textarea id="pabKet" class="border p-2 w-full mb-3 rounded"></textarea>
+
+          <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Simpan PAB</button>
+        </form>
+      </div>
+
+      <div id="statusMsg" class="mt-4 text-sm"></div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const cfg = await fetch("/config/supabase.json").then(r => r.json());
+      const sb = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+      const statusMsg = document.getElementById("statusMsg");
+
+      async function simpanData(table, data) {
+        const { error } = await sb.from(table).insert([data]);
+        if (error) throw error;
+      }
+
+      document.getElementById("formPap").addEventListener("submit", async e => {
+        e.preventDefault();
+        try {
+          await simpanData("esamsat_pap", {
+            tanggal: document.getElementById("papTanggal").value,
+            upt_bayar: document.getElementById("papUpt").value,
+            jumlah: parseFloat(document.getElementById("papJumlah").value),
+            keterangan: document.getElementById("papKet").value || null
+          });
+          statusMsg.innerHTML = `<p class="text-green-600">✅ Data PAP berhasil disimpan.</p>`;
+        } catch (err) {
+          statusMsg.innerHTML = `<p class="text-red-600">❌ Gagal simpan PAP: ${err.message}</p>`;
+        }
+      });
+
+      document.getElementById("formPab").addEventListener("submit", async e => {
+        e.preventDefault();
+        try {
+          await simpanData("esamsat_pab", {
+            tanggal: document.getElementById("pabTanggal").value,
+            upt_bayar: document.getElementById("pabUpt").value,
+            jumlah: parseFloat(document.getElementById("pabJumlah").value),
+            keterangan: document.getElementById("pabKet").value || null
+          });
+          statusMsg.innerHTML = `<p class="text-green-600">✅ Data PAB berhasil disimpan.</p>`;
+        } catch (err) {
+          statusMsg.innerHTML = `<p class="text-red-600">❌ Gagal simpan PAB: ${err.message}</p>`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

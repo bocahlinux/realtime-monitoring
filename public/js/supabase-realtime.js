@@ -232,6 +232,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       .select("*")
       .gte("tanggal", fromDate)
       .lte("tanggal", today)
+      .eq("upt_bayar", "PALANGKA RAYA")
       .order("paid_on", { ascending: false });
 
     if (error) {

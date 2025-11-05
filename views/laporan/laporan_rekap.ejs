@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <%- include('partials/head', { title: 'Laporan Rekap Bulanan e-Samsat' }) %>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-50">
+  <div class="flex">
+    <%- include('partials/sidebar') %>
+
+    <div class="flex-1 flex flex-col">
+      <%- include('partials/navbar', { title: 'Laporan Rekap Bulanan e-Samsat' }) %>
+
+      <main class="flex-1 p-6 space-y-6">
+        <h2 class="text-lg font-semibold text-gray-700">Laporan Bulan <%= bulanNama %> <%= tahun %></h2>
+
+        <div id="rekap-container" class="bg-white shadow rounded-lg p-4 overflow-x-auto">
+          <table id="rekap-table" class="min-w-full text-sm border-collapse border border-gray-200">
+            <thead class="bg-blue-600 text-white">
+              <tr>
+                <th class="p-2 align-middle" rowspan="2">Uraian</th>
+                <th class="p-2 text-center" colspan="2">BBNKB</th>
+                <th class="p-2 text-center" colspan="2">PKB Berjalan</th>
+                <th class="p-2 text-center" colspan="2">PKB Tertunggak</th>
+                <th class="p-2 text-center" rowspan="2">R2</th>
+                <th class="p-2 text-center" rowspan="2">R4</th>
+                <th class="p-2 text-center" rowspan="2">Online</th>
+              </tr>
+              <tr>
+                <th class="p-2 text-right">Pokok</th>
+                <th class="p-2 text-right">Denda</th>
+                <th class="p-2 text-right">Pokok</th>
+                <th class="p-2 text-right">Denda</th>
+                <th class="p-2 text-right">Pokok</th>
+                <th class="p-2 text-right">Denda</th>
+              </tr>
+            </thead>
+            <tbody id="rekap-body"></tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (async () => {
+      const cfg = await fetch('/config/supabase.json').then(r => r.json());
+      const sb = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+
+      const now = new Date();
+      const bulanIni = now.toISOString().slice(0, 7); // yyyy-MM
+      const awalBulan = `${bulanIni}-01`;
+      const akhirBulan = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+        .toISOString()
+        .slice(0, 10); // yyyy-MM-DD
+
+      const { data, error } = await sb
+        .from("esamsat_tx_harian")
+        .select("*")
+        .gte("tanggal", awalBulan)
+        .lte("tanggal", akhirBulan);
+
+      if (error) {
+        console.error('Gagal ambil data Supabase:', error.message);
+        return;
+      }
+
+      const group = {};
+      data.forEach(row => {
+        const jenis = row.pokok_bbnkb > 0 ? 'BBNKB' : 'PKB';
+
+        if (!group[jenis]) {
+          group[jenis] = {
+            pokok_bbnkb: 0,
+            denda_bbnkb: 0,
+            pj_pkb: 0,
+            dj_pkb: 0,
+            pt_pkb: 0,
+            dt_pkb: 0,
+            r2: 0,
+            r4: 0,
+            online: 0,
+          };
+        }
+
+        group[jenis].pokok_bbnkb += row.pokok_bbnkb || 0;
+        group[jenis].denda_bbnkb += row.denda_bbnkb || 0;
+        group[jenis].pj_pkb += row.pj_pkb || 0;
+        group[jenis].dj_pkb += row.dj_pkb || 0;
+        group[jenis].pt_pkb += row.pt_pkb || 0;
+        group[jenis].dt_pkb += row.dt_pkb || 0;
+
+        if (row.roda == 2) group[jenis].r2++;
+        if (row.roda == 4) group[jenis].r4++;
+        if (row.is_online) group[jenis].online++;
+      });
+
+      const fmt = n => new Intl.NumberFormat('id-ID').format(n);
+      const tbody = document.getElementById('rekap-body');
+
+      tbody.innerHTML = Object.entries(group).map(([jenis, v]) => `
+        <tr class="border-b hover:bg-blue-50">
+          <td class="p-2 font-semibold">${jenis}</td>
+          <td class="p-2 text-right">${fmt(v.pokok_bbnkb)}</td>
+          <td class="p-2 text-right">${fmt(v.denda_bbnkb)}</td>
+          <td class="p-2 text-right">${fmt(v.pj_pkb)}</td>
+          <td class="p-2 text-right">${fmt(v.dj_pkb)}</td>
+          <td class="p-2 text-right">${fmt(v.pt_pkb)}</td>
+          <td class="p-2 text-right">${fmt(v.dt_pkb)}</td>
+          <td class="p-2 text-center">${v.r2}</td>
+          <td class="p-2 text-center">${v.r4}</td>
+          <td class="p-2 text-center">${v.online}</td>
+        </tr>
+      `).join('');
+    })();
+  </script>
+</body>
+</html>
