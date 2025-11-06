@@ -2,6 +2,10 @@
 <html lang="id">
 <head>
   <%- include('../partials/head', { title: 'Laporan Rekap Bulanan e-Samsat' }) %>
+  <!-- jsPDF & AutoTable UMD -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.min.js"></script>
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-gray-50">
@@ -34,6 +38,10 @@
           <button id="btn-load" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition">
             Tampilkan
           </button>
+          <button id="btnExportPDF" class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition">
+            📄 Export PDF
+          </button>
+
         </div>
 
         <div id="rekap-wrapper" class="space-y-6">
