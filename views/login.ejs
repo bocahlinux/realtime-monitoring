@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <%- include('partials/head', { title: 'Login | Realtime Monitoring' }) %>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+      }
+      .login-card {
+        max-width: 420px;
+        margin: 100px auto;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-card">
+      <h2 class="text-center text-2xl font-bold mb-2">Login</h2>
+      <p class="text-center text-gray-500 mb-6">Realtime Monitoring Dashboard</p>
+      <% if (error) { %>
+      <div style="background:#fee2e2;color:#991b1b;padding:10px;border-radius:6px;margin-bottom:1rem;">
+        <%= error %>
+      </div>
+      <% } %>
+      <form action="/auth/login" method="POST">
+        <label class="block mb-2 font-semibold">Username</label>
+        <input
+          type="text"
+          name="username"
+          required
+          class="w-full border px-3 py-2 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+        <label class="block mb-2 font-semibold">Password</label>
+        <input
+          type="password"
+          name="password"
+          required
+          class="w-full border px-3 py-2 rounded mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+        <button
+          type="submit"
+          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded font-semibold"
+        >
+          Masuk
+        </button>
+      </form>
+    </div>
+  </body>
+</html>

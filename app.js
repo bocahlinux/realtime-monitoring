@@ -1,19 +1,32 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import express from "express";
+import session from "express-session";
+import dotenv from "dotenv";
+
 import path from "path";
 import { fileURLToPath } from "url";
+import authRoutes from "./routes/auth.js";
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+// app.use(express.static("public"));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "skjlkjIOJLKJL@J!!JLK<>???*(*()*098908908098",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 1000 * 60 * 60 * 6 }, // 6 jam
+  })
+);
 
 // Set EJS sebagai template engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-
+app.use(express.static(path.join(__dirname, "public")));
 // Simulasi data laporan pajak
 let data = [
   {
@@ -32,11 +45,25 @@ let data = [
   },
 ];
 
-// Route utama: tampilkan laporan
+app.use("/auth", authRoutes);
+
+// app.get("/", (req, res) => {
+//   // res.render("laporan", {
+//   //   tanggal: new Date().toLocaleDateString("id-ID"),
+//   //   data,
+//   //   activePage: "dashboard",
+//   // });
+//   res.render("laporan/laporan_realtime", {
+//     //     title: "Laporan Transaksi Harian (Realtime)",
+//     activePage: "dashboard",
+//   });
+// });
+
 app.get("/", (req, res) => {
-  res.render("laporan", {
-    tanggal: new Date().toLocaleDateString("id-ID"),
-    data,
+  if (!req.session.user) return res.redirect("/auth/login");
+  res.render("laporan/laporan_realtime", {
+    title: "Laporan Transaksi Harian (Realtime)",
+    user: req.session.user,
     activePage: "dashboard",
   });
 });
@@ -59,6 +86,7 @@ app.get("/config/supabase.json", (req, res) => {
 });
 
 app.get("/laporan/realtime", (req, res) => {
+  if (!req.session.user) return res.redirect("/auth/login");
   res.render("laporan/laporan_realtime", {
     title: "Laporan Transaksi Harian (Realtime)",
     activePage: "realtime",
@@ -66,12 +94,16 @@ app.get("/laporan/realtime", (req, res) => {
 });
 
 app.get("/laporan/rekap", (req, res) => {
+  if (!req.session.user) return res.redirect("/auth/login");
   const bulanNama = new Date().toLocaleString("id-ID", { month: "long" });
   const tahun = new Date().getFullYear();
-  res.render("laporan/laporan_rekap", { bulanNama, tahun });
+  res.render("laporan/laporan_rekap", { 
+    bulanNama, tahun 
+  });
 });
 
 app.get("/laporan/rekap-bulanan", (req, res) => {
+  if (!req.session.user) return res.redirect("/auth/login");
   res.render("laporan/laporan_rekap_bulanan", {
     title: "Laporan Rekap Bulanan e-Samsat",
     activePage: "rekap-bulanan",
@@ -79,6 +111,7 @@ app.get("/laporan/rekap-bulanan", (req, res) => {
 });
 
 app.get("/transaksi/input-pap", (req, res) => {
+  if (!req.session.user) return res.redirect("/auth/login");
   res.render("transaksi/transaksi_pap", {
     title: "Transaksi PAP",
     activePage: "transaksi-pap",
@@ -86,16 +119,12 @@ app.get("/transaksi/input-pap", (req, res) => {
 });
 
 app.get("/transaksi/input-pab", (req, res) => {
+  if (!req.session.user) return res.redirect("/auth/login");
   res.render("transaksi/transaksi_pab", {
     title: "Transaksi PAB",
     activePage: "transaksi-pab",
   });
 });
-
-
-
-
-app.use(express.static("public"));
 
 app.listen(process.env.PORT, () => {
   console.log(`✅ Server berjalan di http://localhost:${process.env.PORT || port}`);
