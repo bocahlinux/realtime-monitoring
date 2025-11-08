@@ -13,7 +13,16 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// app.use(express.static("public"));
+app.use(express.static("public"));
+
+// middleware keamanan ringan
+app.use((req, res, next) => {
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-XSS-Protection", "1; mode=block");
+  next();
+});
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "skjlkjIOJLKJL@J!!JLK<>???*(*()*098908908098",
@@ -26,7 +35,7 @@ app.use(
 // Set EJS sebagai template engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 // Simulasi data laporan pajak
 let data = [
   {
@@ -78,11 +87,15 @@ app.get("/api/data", (req, res) => {
 });
 
 app.get("/config/supabase.json", (req, res) => {
-    res.set("Cache-Control", "public, max-age=60");
-    res.json({
-        SUPABASE_URL: process.env.SUPABASE_URL,
-        SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
-    });
+  if (!req.session.user) return res.redirect("/auth/login");
+  res.set("Cache-Control", "public, max-age=60");
+  res.json({
+      SUPABASE_URL: process.env.SUPABASE_URL,
+      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+      PORT: process.env.PORT || 3000,
+      NODE_ENV: process.env.NODE_ENV || "development",
+      SESSION_SECRET: process.env.SESSION_SECRET || "skjlkjIOJLKJL@J!!JLK<>???",
+  });
 });
 
 app.get("/laporan/realtime", (req, res) => {
@@ -126,6 +139,7 @@ app.get("/transaksi/input-pab", (req, res) => {
   });
 });
 
+const PORT = process.env.PORT || 3000;
 app.listen(process.env.PORT, () => {
-  console.log(`✅ Server berjalan di http://localhost:${process.env.PORT || port}`);
+  console.log(`✅ Server berjalan di http://localhost:${process.env.PORT || PORT}`);
 });

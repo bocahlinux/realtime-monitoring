@@ -36,7 +36,7 @@ router.post("/login", async (req, res) => {
       .select("*")
       .eq("username", username)
       .single();
-    console.log("🔍 Query result:", { userData, error, username, password });
+    // console.log("🔍 Query result:", { userData, error, username, password });
     if (error || !userData) {
       return res.render("login", { error: "Username atau password salah" });
     }
@@ -56,7 +56,7 @@ router.post("/login", async (req, res) => {
       upt: userData.upt,
     };
 
-    console.log("✅ LOGIN SUCCESS:", req.session.user);
+    // console.log("✅ LOGIN SUCCESS:", req.session.user);
     res.redirect("/");
   } catch (err) {
     console.error("Login Error:", err);
