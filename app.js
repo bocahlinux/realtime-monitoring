@@ -87,7 +87,7 @@ app.get("/api/data", (req, res) => {
 });
 
 app.get("/config/supabase.json", (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   res.set("Cache-Control", "public, max-age=60");
   res.json({
       SUPABASE_URL: process.env.SUPABASE_URL,
@@ -99,7 +99,7 @@ app.get("/config/supabase.json", (req, res) => {
 });
 
 app.get("/laporan/realtime", (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   res.render("laporan/laporan_realtime", {
     title: "Laporan Transaksi Harian (Realtime)",
     activePage: "realtime",
@@ -107,7 +107,7 @@ app.get("/laporan/realtime", (req, res) => {
 });
 
 app.get("/laporan/rekap", (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   const bulanNama = new Date().toLocaleString("id-ID", { month: "long" });
   const tahun = new Date().getFullYear();
   res.render("laporan/laporan_rekap", { 
@@ -116,7 +116,7 @@ app.get("/laporan/rekap", (req, res) => {
 });
 
 app.get("/laporan/rekap-bulanan", (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   res.render("laporan/laporan_rekap_bulanan", {
     title: "Laporan Rekap Bulanan e-Samsat",
     activePage: "rekap-bulanan",
@@ -124,7 +124,7 @@ app.get("/laporan/rekap-bulanan", (req, res) => {
 });
 
 app.get("/transaksi/input-pap", (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   res.render("transaksi/transaksi_pap", {
     title: "Transaksi PAP",
     activePage: "transaksi-pap",
@@ -132,7 +132,7 @@ app.get("/transaksi/input-pap", (req, res) => {
 });
 
 app.get("/transaksi/input-pab", (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   res.render("transaksi/transaksi_pab", {
     title: "Transaksi PAB",
     activePage: "transaksi-pab",

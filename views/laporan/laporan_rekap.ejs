@@ -58,7 +58,8 @@
         .from("esamsat_tx_harian")
         .select("*")
         .gte("tanggal", awalBulan)
-        .lte("tanggal", akhirBulan);
+        .lte("tanggal", akhirBulan)
+        .eq("upt_bayar", "PALANGKA RAYA");
 
       if (error) {
         console.error('Gagal ambil data Supabase:', error.message);
