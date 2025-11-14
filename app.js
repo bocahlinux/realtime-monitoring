@@ -77,7 +77,7 @@ app.use("/auth", authRoutes);
 //   });
 // });
 app.get("/", (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
+  // if (!req.session.user) return res.redirect("/auth/login");
   res.render("dashboard", {
     title: "Dashboard",
     user: req.session.user,
@@ -96,7 +96,7 @@ app.get("/api/data", (req, res) => {
 });
 
 app.get("/config/supabase.json", (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
+  // if (!req.session.user) return res.redirect("/auth/login");
   res.set("Cache-Control", "public, max-age=60");
   res.json({
       SUPABASE_URL: process.env.SUPABASE_URL,

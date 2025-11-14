@@ -82,8 +82,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         pkbDenda +
         bbnPokok +
         bbnDenda +
-        swPokok +
-        swDenda +
+        // swPokok +
+        // swDenda +
         stnk +
         tnkb +
         sp3;
@@ -93,8 +93,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         pkbDenda,
         bbnPokok,
         bbnDenda,
-        swPokok,
-        swDenda,
+        // swPokok,
+        // swDenda,
         stnk,
         tnkb,
         sp3,
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         comp.tnkb +
         comp.sp3;
       // Denda = semua denda
-      sum.denda += comp.pkbDenda + comp.bbnDenda + comp.swDenda;
+      // sum.denda += comp.pkbDenda + comp.bbnDenda + comp.swDenda;
       sum.total_pkb += comp.pkbPokok + comp.pkbDenda;
       sum.total_bbnkb += comp.bbnPokok + comp.bbnDenda;
       sum.jumlah_transaksi += 1;
@@ -129,78 +129,113 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // === Query data dari Supabase ===
     async function loadData() {
-      const { data, error } = await sb
-        .from("esamsat_tx_harian")
-        .select(
-          [
-            "tanggal",
-            "upt_bayar",
-            "pj_pkb",
-            "pt_pkb",
-            "dj_pkb",
-            "dt_pkb",
-            "pokok_bbnkb",
-            "denda_bbnkb",
-            "pj_swdkllj",
-            "dj_swdkllj",
-            "pt_swdkllj",
-            "dt_swdkllj",
-            "pokok_stnk",
-            "pokok_tnkb",
-            "pokok_sp3",
-          ].join(",")
-        )
-        .eq("upt_bayar", "PALANGKA RAYA")
-        .gte("tanggal", firstOfMonthStr)
-        .lte("tanggal", todayStr);
+      try {
+        // === STEP 1: Ambil tabel UPT + kabupaten (join manual) ===
+        const { data: uptList, error: uptError } = await sb
+          .from("esamsat_upt")
+          .select(`
+            nama,
+            kabupaten_id,
+            kabupaten:kabupaten_id (
+              id,
+              name
+            )
+          `)
+          .neq("is_other", "True");
 
-      if (error) {
-        console.error("Gagal load data dashboard:", error);
-        const tbody = document.getElementById("unit-table-body");
-        if (tbody) {
-          tbody.innerHTML =
-            '<tr><td colspan="5" class="px-3 py-6 text-center text-red-500 text-xs">Gagal memuat data dashboard.</td></tr>';
+        if (uptError) {
+          console.error("Gagal load tabel UPT:", uptError);
+          return;
         }
-        return;
+
+        // === STEP 2: Filter UPT yang kabupatennya 'KOTA PALANGKA RAYA' ===
+        // Format uptList.x.kabupaten.name
+        const targetKabupaten = "KOTA PALANGKA RAYA";
+
+        const uptPalangka = uptList
+          .filter((u) => u.kabupaten && u.kabupaten.name === targetKabupaten)
+          .map((u) => u.nama);
+
+        console.log("UPT yang termasuk Palangka Raya:", uptPalangka);
+
+        if (uptPalangka.length === 0) {
+          console.warn("Tidak ditemukan UPT dengan kabupaten Kota Palangka Raya");
+          return;
+        }
+
+        // === STEP 3: Query transaksi dengan kondisi upt_bayar berada dalam list uptPalangka ===
+        const { data, error } = await sb
+          .from("esamsat_tx_harian")
+          .select(
+            [
+              "tanggal",
+              "upt_bayar",
+              "pj_pkb",
+              "pt_pkb",
+              "dj_pkb",
+              "dt_pkb",
+              "pokok_bbnkb",
+              "denda_bbnkb",
+              "pokok_stnk",
+              "pokok_tnkb",
+              "pokok_sp3",
+            ].join(",")
+          )
+          .in("upt_bayar", uptPalangka)     // <-- FILTER DISINI
+          .gte("tanggal", firstOfMonthStr)
+          .lte("tanggal", todayStr);
+
+        if (error) {
+          console.error("Gagal load data dashboard:", error);
+          const tbody = document.getElementById("unit-table-body");
+          if (tbody) {
+            tbody.innerHTML =
+              '<tr><td colspan="5" class="px-3 py-6 text-center text-red-500 text-xs">Gagal memuat data dashboard.</td></tr>';
+          }
+          return;
+        }
+
+        const todaySum = makeEmptySummary();
+        const yesterdaySum = makeEmptySummary();
+        const unitMap = {}; // key: upt_bayar
+
+        (data || []).forEach((row) => {
+          const tgl = row.tanggal;
+          const comp = calcComponents(row);
+
+          const upt = row.upt_bayar || "TIDAK TERISI";
+          if (!unitMap[upt]) {
+            unitMap[upt] = {
+              nama_upt: upt,
+              kode_upt: upt,
+              total_hari_ini: 0,
+              total_kemarin: 0,
+              total_bulan_ini: 0,
+            };
+          }
+
+          // Akumulasi bulan ini untuk UPT
+          unitMap[upt].total_bulan_ini += comp.total;
+
+          if (tgl === todayStr) {
+            applyRowToSummary(todaySum, comp);
+            unitMap[upt].total_hari_ini += comp.total;
+          } else if (tgl === yesterdayStr) {
+            applyRowToSummary(yesterdaySum, comp);
+            unitMap[upt].total_kemarin += comp.total;
+          }
+        });
+
+        renderTopCards(todaySum, yesterdaySum);
+        renderUnitTable(Object.values(unitMap));
+        lastUpdateEl.textContent = new Date().toLocaleTimeString("id-ID");
+
+        lucide.createIcons();
+      } catch (e) {
+        console.error("Error fatal loadData():", e);
       }
-
-      const todaySum = makeEmptySummary();
-      const yesterdaySum = makeEmptySummary();
-      const unitMap = {}; // key: upt_bayar
-
-      (data || []).forEach((row) => {
-        const tgl = row.tanggal;
-        const comp = calcComponents(row);
-
-        const upt = row.upt_bayar || "TIDAK TERISI";
-        if (!unitMap[upt]) {
-          unitMap[upt] = {
-            nama_upt: upt,
-            kode_upt: upt,
-            total_hari_ini: 0,
-            total_kemarin: 0,
-            total_bulan_ini: 0,
-          };
-        }
-
-        // Akumulasi bulan ini untuk UPT
-        unitMap[upt].total_bulan_ini += comp.total;
-
-        if (tgl === todayStr) {
-          applyRowToSummary(todaySum, comp);
-          unitMap[upt].total_hari_ini += comp.total;
-        } else if (tgl === yesterdayStr) {
-          applyRowToSummary(yesterdaySum, comp);
-          unitMap[upt].total_kemarin += comp.total;
-        }
-      });
-
-      renderTopCards(todaySum, yesterdaySum);
-      renderUnitTable(Object.values(unitMap));
-      lastUpdateEl.textContent = new Date().toLocaleTimeString("id-ID");
-      // Refresh ikon lucide setelah konten dinamis
-      lucide.createIcons();
     }
+
 
     // === Render bagian atas (kartu ringkasan) ===
     function renderTopCards(todaySum, yesterdaySum) {
