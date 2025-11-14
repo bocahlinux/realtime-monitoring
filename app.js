@@ -68,14 +68,23 @@ app.use("/auth", authRoutes);
 //   });
 // });
 
+// app.get("/", (req, res) => {
+//   if (!req.session.user) return res.redirect("/auth/login");
+//   res.render("laporan/laporan_realtime", {
+//     title: "Laporan Transaksi Harian (Realtime)",
+//     user: req.session.user,
+//     activePage: "dashboard",
+//   });
+// });
 app.get("/", (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
-  res.render("laporan/laporan_realtime", {
-    title: "Laporan Transaksi Harian (Realtime)",
+  res.render("dashboard", {
+    title: "Dashboard",
     user: req.session.user,
     activePage: "dashboard",
   });
 });
+
 
 // API endpoint untuk update otomatis per hari
 app.get("/api/data", (req, res) => {
