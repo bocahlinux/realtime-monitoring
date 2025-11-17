@@ -1,53 +1,99 @@
 <!DOCTYPE html>
 <html lang="id">
   <head>
-    <%- include('partials/head', { title: 'Login | Realtime Monitoring' }) %>
+    <%- include('partials/head', { title: 'Login | Digi Lapor' }) %>
+
+    <!-- DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
+
     <style>
-      body {
-        font-family: "Poppins", sans-serif;
-        background: linear-gradient(135deg, #3b82f6, #6366f1);
+      /* Background pattern lembut bergaya pemerintah */
+      .gov-bg {
+        background:
+          linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
       }
-      .login-card {
-        max-width: 420px;
-        margin: 100px auto;
-        background: white;
-        border-radius: 1rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        padding: 2rem;
+
+      @media (prefers-color-scheme: dark) {
+        .gov-bg {
+          background:
+            linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+      }
+
+      /* Fade-slide-up */
+      @keyframes fadeSlideUp {
+        0% { opacity: 0; transform: translateY(24px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-slide-up {
+        animation: fadeSlideUp .55s ease-out forwards;
       }
     </style>
   </head>
-  <body>
-    <div class="login-card">
-      <h2 class="text-center text-2xl font-bold mb-2">Login</h2>
-      <p class="text-center text-gray-500 mb-6">Realtime Monitoring Dashboard</p>
+
+  <body class="min-h-screen gov-bg flex items-center justify-center font-[Poppins] px-4">
+
+    <!-- Card bergaya GOV UI -->
+    <div class="w-full max-w-md bg-white/90 dark:bg-gray-800/70 backdrop-blur-lg 
+                border border-gray-200 dark:border-gray-700 shadow-xl rounded-xl p-8
+                animate-fade-slide-up">
+
+      <!-- Logo Pemerintah -->
+      <div class="flex justify-center mb-4">
+        <img src="/assets/logo-kalteng.png"
+             class="h-20 w-auto" />
+      </div>
+
+      <h2 class="text-center text-3xl font-bold text-gray-800 dark:text-white">
+        DIGI LAPOR
+      </h2>
+      <p class="text-center text-gray-600 dark:text-gray-400 text-sm mb-6 tracking-wide">
+        Aplikasi Pemerintah Provinsi Kalimantan Tengah
+      </p>
+
+      <!-- Error -->
       <% if (error) { %>
-      <div style="background:#fee2e2;color:#991b1b;padding:10px;border-radius:6px;margin-bottom:1rem;">
-        <%= error %>
+      <div class="alert alert-error mb-6 shadow-sm">
+        <span><%= error %></span>
       </div>
       <% } %>
-      <form action="/auth/login" method="POST">
-        <label class="block mb-2 font-semibold">Username</label>
-        <input
-          type="text"
-          name="username"
-          required
-          class="w-full border px-3 py-2 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
-        <label class="block mb-2 font-semibold">Password</label>
-        <input
-          type="password"
-          name="password"
-          required
-          class="w-full border px-3 py-2 rounded mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
+
+      <form action="/auth/login" method="POST" class="space-y-4">
+
+        <!-- Username -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-semibold text-gray-700 dark:text-gray-200">Username</span>
+          </label>
+          <input type="text" name="username" required
+                 class="input input-bordered bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 
+                        text-gray-800 dark:text-gray-100 shadow-sm" />
+        </div>
+
+        <!-- Password -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-semibold text-gray-700 dark:text-gray-200">Password</span>
+          </label>
+          <input type="password" name="password" required
+                 class="input input-bordered bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 
+                        text-gray-800 dark:text-gray-100 shadow-sm" />
+        </div>
+
+        <!-- Button -->
         <button
-          type="submit"
-          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded font-semibold"
+          class="btn w-full bg-blue-700 hover:bg-blue-800 text-white border-none shadow-md 
+                    font-semibold tracking-wide"
         >
           Masuk
         </button>
       </form>
+
+      <!-- Footer -->
+      <p class="text-center text-xs text-gray-500 dark:text-gray-500 mt-8">
+        © <%= new Date().getFullYear() %> Pemerintah Provinsi Kalimantan Tengah  
+      </p>
     </div>
+
   </body>
 </html>
