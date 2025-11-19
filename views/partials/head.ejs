@@ -1,12 +1,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title><%= title %> | e-Samsat Dashboard</title>
+<title><%= subtitle %> | DIGI LAPOR</title>
 <link rel="icon" href="/favicon.ico" />
 <script src="https://cdn.tailwindcss.com"></script>
 <link
   href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
   rel="stylesheet"
 />
+<link rel="stylesheet" href="/assets/css/custom.css">
 <style>
   body {
     font-family: "Poppins", sans-serif;
@@ -15,4 +16,16 @@
     background-color: #3b82f6;
     color: #fff;
   }
+  #sidebar {
+    transition: width .3s ease, backdrop-filter .3s ease;
+  }
+
+  #sidebar-logo {
+    transition: transform .3s ease;
+  }
+
+  .sidebar-text {
+    transition: all .25s ease;
+  }
+
 </style>

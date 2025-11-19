@@ -171,13 +171,39 @@ document.addEventListener("DOMContentLoaded", async () => {
       showStatus("Memeriksa koneksi realtime...", "warn");
     }, 700);
 
+    // channel = sb
+    //   .channel("realtime:esamsat_tx_harian")
+    //   .on(
+    //     "postgres_changes",
+    //     { event: "*", schema: "public", table: "esamsat_tx_harian" },
+    //     // (payload) => applyDelta(payload)
+    //     (payload) => {
+    //       const row = payload.new ?? payload.old;
+    //       const upt = normalize(row?.upt_bayar);
+
+    //       if (upt !== "KOTAWARINGIN TIMUR") return;
+
+    //       applyDelta(payload);
+    //     }
+    //   );
+
     channel = sb
-      .channel("realtime:esamsat_tx_harian")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "esamsat_tx_harian" },
-        (payload) => applyDelta(payload)
-      );
+    .channel("realtime:esamsat_tx_harian")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "esamsat_tx_harian" },
+      // (payload) => applyDelta(payload)
+      (payload) => {
+        const row = payload.new ?? payload.old;
+
+        // Filter HANYA upt PALANGKA RAYA
+        if (!row || row.upt_bayar?.trim() !== "PALANGKA RAYA") return;
+
+        // Lanjutkan proses
+        applyDelta(payload);
+      }
+    );
+
 
     const status = await channel.subscribe((state) => {
       if (state === "SUBSCRIBED") {

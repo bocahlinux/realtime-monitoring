@@ -80,6 +80,7 @@ app.get("/", (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
   res.render("dashboard", {
     title: "Dashboard",
+    subtitle: "DASHBOARD",
     user: req.session.user,
     activePage: "dashboard",
   });
@@ -110,24 +111,30 @@ app.get("/config/supabase.json", (req, res) => {
 app.get("/laporan/realtime", (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
   res.render("laporan/laporan_realtime", {
-    title: "Laporan Transaksi Harian (Realtime)",
+    title: "Laporan Realtime",
+    subtitle: "REALTIME",
+    user: req.session.user,
     activePage: "realtime",
   });
 });
 
-app.get("/laporan/rekap", (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
-  const bulanNama = new Date().toLocaleString("id-ID", { month: "long" });
-  const tahun = new Date().getFullYear();
-  res.render("laporan/laporan_rekap", { 
-    bulanNama, tahun 
-  });
-});
+// app.get("/laporan/rekap", (req, res) => {
+//   if (!req.session.user) return res.redirect("/auth/login");
+//   const bulanNama = new Date().toLocaleString("id-ID", { month: "long" });
+//   const tahun = new Date().getFullYear();
+//   res.render("laporan/laporan_rekap", { 
+//     subtitle: "Dashboard",
+//     user: req.session.user,
+//     bulanNama, tahun 
+//   });
+// });
 
 app.get("/laporan/rekap-bulanan", (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
   res.render("laporan/laporan_rekap_bulanan", {
-    title: "Laporan Rekap Bulanan e-Samsat",
+    title: "Laporan Rekap",
+    subtitle: "REKAP BULANAN",
+    user: req.session.user,
     activePage: "rekap-bulanan",
   });
 });
@@ -136,6 +143,8 @@ app.get("/transaksi/input-pap", (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
   res.render("transaksi/transaksi_pap", {
     title: "Transaksi PAP",
+    subtitle: "TRANSAKSI PAP",
+    user: req.session.user,
     activePage: "transaksi-pap",
   });
 });
@@ -144,6 +153,8 @@ app.get("/transaksi/input-pab", (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
   res.render("transaksi/transaksi_pab", {
     title: "Transaksi PAB",
+    subtitle: "TRANSAKSI PAB",
+    user: req.session.user,
     activePage: "transaksi-pab",
   });
 });

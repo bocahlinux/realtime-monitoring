@@ -1,42 +1,78 @@
+<script src="https://unpkg.com/lucide@latest"></script>
 <!-- Navbar -->
-<header
-  class="flex justify-between items-center bg-white border-b border-gray-200 px-6 py-3 sticky top-0 z-10"
->
-  <div class="flex items-center gap-2">
-    <button
-      id="menu-btn"
-      class="md:hidden text-gray-600 hover:text-blue-600 focus:outline-none"
-    >
-      ☰
-    </button>
-    <h2 class="text-lg font-semibold text-gray-700"><%= title %></h2>
-    <!-- Status koneksi realtime -->
-        <span
-        id="rt-status"
-        class="hidden ml-3 text-sm font-normal px-2 py-1 rounded-md border transition"
-        >
-        Memeriksa koneksi realtime...
-        </span>
+<header class="bg-[#0F1E4D] border-b border-blue-300 
+          text-white shadow-sm px-6 py-3 sticky top-0 flex items-center justify-between">
+
+  <div class="flex items-center gap-3">
+    <img src="/assets/digilapor-icon.svg" class="w-7 h-7">
+    <span class="text-lg font-semibold tracking-wide"><%= title %></span>
   </div>
 
-  <div class="flex items-center gap-4">
-    <div class="text-sm text-gray-600">
-      <span id="current-date"></span>
-    </div>
-    <div
-      class="w-9 h-9 flex items-center justify-center rounded-full bg-blue-600 text-white font-semibold"
-    >
-      <span>Y</span>
+  <!-- Right Side -->
+  <div class="relative flex items-center gap-3">
+
+    <!-- Avatar Trigger -->
+    <button id="avatarBtn"
+      class="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center font-semibold hover:bg-white/30 transition">
+      Y
+    </button>
+
+    <!-- Dropdown -->
+    <div id="dropdownMenu"
+      class="hidden absolute right-0 top-12 w-48 bg-white text-gray-700 rounded-lg shadow-xl 
+             border border-gray-200 overflow-hidden z-50 animate-fadeSlide">
+      
+      <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+        <p class="text-sm font-semibold">Yudha</p>
+        <p class="text-xs text-gray-500">Admin Sistem</p>
+      </div>
+
+      <a href="/profil" class="block px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2">
+        <i data-lucide="user" class="w-4 h-4"></i> Profil
+      </a>
+
+      <a href="/pengaturan" class="block px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2">
+        <i data-lucide="settings" class="w-4 h-4"></i> Pengaturan
+      </a>
+
+      <button type="submit"
+        class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
+        <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+      </button>
+
     </div>
   </div>
 </header>
+
+
 
 <script>
   // tampilkan tanggal hari ini di navbar
   document.addEventListener("DOMContentLoaded", () => {
     const date = new Date();
     const opts = { year: "numeric", month: "long", day: "numeric" };
-    document.getElementById("current-date").textContent =
-      date.toLocaleDateString("id-ID", opts);
+    const el = document.getElementById("current-date");
+    if (el) {
+      el.textContent = date.toLocaleDateString("id-ID", opts);
+    }
   });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const avatarBtn = document.getElementById("avatarBtn");
+    const dropdown = document.getElementById("dropdownMenu");
+
+    avatarBtn.addEventListener("click", () => {
+      dropdown.classList.toggle("hidden");
+    });
+
+    // klik di luar dropdown untuk menutup
+    document.addEventListener("click", (e) => {
+      if (!avatarBtn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.add("hidden");
+      }
+    });
+  });
+  
+  lucide.createIcons(); // aktifkan ikon lucide di seluruh halaman
+
 </script>

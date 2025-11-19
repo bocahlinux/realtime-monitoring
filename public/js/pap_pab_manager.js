@@ -65,16 +65,16 @@ async function initPapPab(type) {
 
         toast.innerHTML = `
             <div class="flex items-start gap-3">
-            <div class="flex-shrink-0 text-red-500 text-xl">⚠️</div>
-            <div>
-                <p class="text-sm text-gray-800 font-semibold mb-1">Konfirmasi Hapus</p>
-                <p class="text-xs text-gray-600">${message}</p>
-            </div>
-            </div>
-            <div class="flex justify-end gap-2 mt-3">
-            <button class="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded text-sm transition">Batal</button>
-            <button class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm transition">Hapus</button>
-            </div>
+                <div class="flex-shrink-0 text-red-500 text-xl">⚠️</div>
+                <div>
+                    <p class="text-sm text-gray-800 font-semibold mb-1">Konfirmasi Hapus</p>
+                    <p class="text-xs text-gray-600">${message}</p>
+                </div>
+                </div>
+                <div class="flex justify-end gap-2 mt-3">
+                    <button class="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded text-sm transition">Batal</button>
+                    <button class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm transition">Hapus</button>
+                </div>
         `;
 
         toastWrapper.appendChild(toast);
@@ -109,23 +109,23 @@ async function initPapPab(type) {
 
     // --- FORM INPUT ---
     formContainer.innerHTML = `
-        <form id="formInput" class="bg-white p-5 shadow rounded-lg max-w-lg mb-6">
-        <label class="block text-sm font-medium mb-1">Tanggal</label>
-        <input type="date" id="tgl" class="border p-2 w-full mb-3 rounded" required>
+        <form id="formInput" class="bg-white p-5 shadow rounded-lg max-w-lg mb-12">
+            <label class="block text-sm font-medium mb-1">Tanggal</label>
+            <input type="date" id="tgl" class="border p-2 w-full mb-3 rounded" required>
 
-        <label class="block text-sm font-medium mb-1">UPT Bayar</label>
-        <input type="text" id="upt" class="border p-2 w-full mb-3 rounded bg-gray-100" value="PALANGKA RAYA" disabled>
+            <label class="block text-sm font-medium mb-1">UPT Bayar</label>
+            <input type="text" id="upt" class="border p-2 w-full mb-3 rounded bg-gray-100" value="PALANGKA RAYA" disabled>
 
-        <label class="block text-sm font-medium mb-1">Jumlah (Rp)</label>
-        <input type="text" id="jumlahDisplay" class="border p-2 w-full mb-3 rounded text-right" placeholder="Masukkan nominal..." required>
-        <input type="hidden" id="jumlah">
+            <label class="block text-sm font-medium mb-1">Jumlah (Rp)</label>
+            <input type="text" id="jumlahDisplay" class="border p-2 w-full mb-3 rounded text-right" placeholder="Masukkan nominal..." required>
+            <input type="hidden" id="jumlah">
 
-        <label class="block text-sm font-medium mb-1">Keterangan</label>
-        <textarea id="ket" class="border p-2 w-full mb-3 rounded" placeholder="Opsional..."></textarea>
+            <label class="block text-sm font-medium mb-1">Keterangan</label>
+            <textarea id="ket" class="border p-2 w-full mb-3 rounded" placeholder="Opsional..."></textarea>
 
-        <button type="submit" class="bg-${color}-600 hover:bg-${color}-700 text-white px-4 py-2 rounded">
-            💾 Simpan ${title}
-        </button>
+            <button type="submit" class="bg-${color}-600 hover:bg-${color}-700 text-white px-4 py-2 rounded">
+                💾 Simpan ${title}
+            </button>
         </form>
     `;
 
@@ -155,58 +155,58 @@ async function initPapPab(type) {
     // --- MODAL EDIT ---
     modalContainer.innerHTML = `
         <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded shadow-lg w-96 relative">
-            <h2 class="text-lg font-semibold mb-3">✏️ Edit Data ${title}</h2>
-            <form id="formEdit">
-            <input type="hidden" id="editId">
-            <label class="block text-sm mb-1">Tanggal</label>
-            <input type="date" id="editTanggal" class="border p-2 w-full mb-3 rounded" required>
-            <label class="block text-sm mb-1">UPT Bayar</label>
-            <input type="text" id="editUpt" class="border p-2 w-full mb-3 rounded bg-gray-100" value="PALANGKA RAYA" disabled>
-            <label class="block text-sm mb-1">Jumlah (Rp)</label>
-            <input type="text" id="editJumlahDisplay" class="border p-2 w-full mb-3 rounded text-right" required>
-            <input type="hidden" id="editJumlah">
-            <label class="block text-sm mb-1">Keterangan</label>
-            <textarea id="editKet" class="border p-2 w-full mb-3 rounded"></textarea>
-            <div class="flex justify-end gap-2 mt-3">
-                <button type="button" id="cancelEdit" class="bg-gray-300 px-3 py-1 rounded">Batal</button>
-                <button type="submit" class="bg-${color}-600 text-white px-3 py-1 rounded">Simpan</button>
+            <div class="bg-white p-6 rounded shadow-lg w-96 relative">
+                <h2 class="text-lg font-semibold mb-3">✏️ Edit Data ${title}</h2>
+                <form id="formEdit">
+                    <input type="hidden" id="editId">
+                    <label class="block text-sm mb-1">Tanggal</label>
+                    <input type="date" id="editTanggal" class="border p-2 w-full mb-3 rounded" required>
+                    <label class="block text-sm mb-1">UPT Bayar</label>
+                    <input type="text" id="editUpt" class="border p-2 w-full mb-3 rounded bg-gray-100" value="PALANGKA RAYA" disabled>
+                    <label class="block text-sm mb-1">Jumlah (Rp)</label>
+                    <input type="text" id="editJumlahDisplay" class="border p-2 w-full mb-3 rounded text-right" required>
+                    <input type="hidden" id="editJumlah">
+                    <label class="block text-sm mb-1">Keterangan</label>
+                    <textarea id="editKet" class="border p-2 w-full mb-3 rounded"></textarea>
+                    <div class="flex justify-end gap-2 mt-3">
+                        <button type="button" id="cancelEdit" class="bg-gray-300 px-3 py-1 rounded">Batal</button>
+                        <button type="submit" class="bg-${color}-600 text-white px-3 py-1 rounded">Simpan</button>
+                    </div>
+                </form>
             </div>
-            </form>
-        </div>
         </div>
     `;
 
     // --- TABEL DATA ---
     tableContainer.innerHTML = `
         <div class="bg-white shadow rounded-lg overflow-x-auto">
-        <div class="p-4 flex flex-wrap gap-2 items-center justify-between">
-            <div class="flex gap-2 items-center">
-            <input type="date" id="filterTanggal" class="border p-2 rounded text-sm">
-            <input type="text" id="filterUpt" placeholder="Cari UPT..." class="border p-2 rounded text-sm">
-            <button id="btnFilter" class="bg-${color}-600 hover:bg-${color}-700 text-white px-3 py-1 rounded text-sm">🔍 Filter</button>
+            <div class="p-4 flex flex-wrap gap-2 items-center justify-between">
+                <div class="flex gap-2 items-center">
+                <input type="date" id="filterTanggal" class="border p-2 rounded text-sm">
+                <input type="text" id="filterUpt" placeholder="Cari UPT..." class="border p-2 rounded text-sm">
+                <button id="btnFilter" class="bg-${color}-600 hover:bg-${color}-700 text-white px-3 py-1 rounded text-sm">🔍 Filter</button>
+                </div>
+                <div id="paginationInfo" class="text-sm text-gray-600"></div>
             </div>
-            <div id="paginationInfo" class="text-sm text-gray-600"></div>
-        </div>
 
-        <table class="min-w-full text-sm border border-gray-200">
-            <thead class="bg-${color}-100 text-${color}-800 font-semibold">
-            <tr>
-                <th class="border p-2 text-left">Tanggal</th>
-                <th class="border p-2 text-left">UPT</th>
-                <th class="border p-2 text-right">Jumlah (Rp)</th>
-                <th class="border p-2 text-left">Keterangan</th>
-                <th class="border p-2 text-center w-32">Aksi</th>
-            </tr>
-            </thead>
-            <tbody id="dataTableBody"></tbody>
-        </table>
+            <table class="min-w-full text-sm border border-gray-200">
+                <thead class="bg-${color}-100 text-${color}-800 font-semibold">
+                <tr>
+                    <th class="border p-2 text-left">Tanggal</th>
+                    <th class="border p-2 text-left">UPT</th>
+                    <th class="border p-2 text-right">Jumlah (Rp)</th>
+                    <th class="border p-2 text-left">Keterangan</th>
+                    <th class="border p-2 text-center w-32">Aksi</th>
+                </tr>
+                </thead>
+                <tbody id="dataTableBody"></tbody>
+            </table>
 
-        <div class="flex justify-between items-center p-3 text-sm">
-            <button id="prevPage" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">⬅️ Sebelumnya</button>
-            <span id="pageInfo" class="text-gray-600"></span>
-            <button id="nextPage" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">Berikutnya ➡️</button>
-        </div>
+            <div class="flex justify-between items-center p-3 text-sm">
+                <button id="prevPage" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">⬅️ Sebelumnya</button>
+                <span id="pageInfo" class="text-gray-600"></span>
+                <button id="nextPage" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">Berikutnya ➡️</button>
+            </div>
         </div>
     `;
 
@@ -239,14 +239,14 @@ async function initPapPab(type) {
         .map(
             d => `
             <tr class="hover:bg-gray-50">
-            <td class="border p-2">${new Date(d.tanggal).toLocaleDateString("id-ID")}</td>
-            <td class="border p-2">${d.upt_bayar}</td>
-            <td class="border p-2 text-right">${new Intl.NumberFormat("id-ID").format(d.jumlah)}</td>
-            <td class="border p-2">${d.keterangan || "-"}</td>
-            <td class="border p-2 text-center">
-                <button class="text-${color}-600 hover:underline" onclick="editData('${d.id}','${d.tanggal}','${d.jumlah}','${d.keterangan || ""}')">✏️</button>
-                <button class="text-red-600 hover:underline ml-2" onclick="hapusData('${d.id}')">🗑️</button>
-            </td>
+                <td class="border p-2">${new Date(d.tanggal).toLocaleDateString("id-ID")}</td>
+                <td class="border p-2">${d.upt_bayar}</td>
+                <td class="border p-2 text-right">${new Intl.NumberFormat("id-ID").format(d.jumlah)}</td>
+                <td class="border p-2">${d.keterangan || "-"}</td>
+                <td class="border p-2 text-center">
+                    <button class="text-${color}-600 hover:underline" onclick="editData('${d.id}','${d.tanggal}','${d.jumlah}','${d.keterangan || ""}')">✏️</button>
+                    <button class="text-red-600 hover:underline ml-2" onclick="hapusData('${d.id}')">🗑️</button>
+                </td>
             </tr>`
         )
         .join("");
