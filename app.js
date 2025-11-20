@@ -97,7 +97,7 @@ app.get("/api/data", (req, res) => {
 });
 
 app.get("/config/supabase.json", (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
+  // if (!req.session.user) return res.redirect("/auth/login");
   res.set("Cache-Control", "public, max-age=60");
   res.json({
       SUPABASE_URL: process.env.SUPABASE_URL,
@@ -130,7 +130,7 @@ app.get("/laporan/realtime", (req, res) => {
 // });
 
 app.get("/laporan/rekap-bulanan", (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
+  // if (!req.session.user) return res.redirect("/auth/login");
   res.render("laporan/laporan_rekap_bulanan", {
     title: "Laporan Rekap",
     subtitle: "REKAP BULANAN",

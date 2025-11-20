@@ -677,10 +677,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   // ==== EXPORT PDF (Versi pdfmake, per hari satu halaman) ====
   (function setupPdfMakeExporter() {
     const BTN_ID = "btnExportPDF";
-    const bulan = bulanSelect.value.padStart(2, "0");
+    const blnselect = document.getElementById("bulan");
+    const blnPdf = blnselect.value.padStart(2, "0");
     const tahun = tahunSelect.value;
     const upt = "PALANGKA RAYA";
-    const tw = getTriwulan(bulan);
     const btn = document.getElementById(BTN_ID);
     if (!btn) return;
 
@@ -704,6 +704,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         ...opt,
       });
 
+      const blnPdf = document.getElementById("bulan").value.padStart(2, "0");
+      const tw = getTriwulan(blnPdf);
       // 🟦 Baris 1
       const r1 = [
         base("URAIAN", { rowSpan: 3, margin: [0, 16, 0, 0] }),
@@ -832,8 +834,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const docDefinition = {
         styles: {
-          tableHeader: { fontSize: 8, bold: true },
-          tableBody: { fontSize: 7 },
+          tableHeader: { fontSize: 7, bold: true },
+          tableBody: { fontSize: 6 },
         },
         pageOrientation: "landscape",
         pageSize: "FOLIO",
@@ -870,14 +872,14 @@ document.addEventListener("DOMContentLoaded", async () => {
           table: { 
             headerRows: 3,
             widths: [
-              36, // URAIAN
-              58, // TARGET
-              58, // PENERIMAAN S/D HARI LALU
-              58, // INDUK
-              58, // SAMKEL
-              58, // REALISASI S/D HARI INI
-              26, // 100%
-              26, // SISA TW
+              28, // URAIAN
+              55, // TARGET
+              55, // PENERIMAAN S/D HARI LALU
+              55, // INDUK
+              40, // SAMKEL
+              55, // REALISASI S/D HARI INI
+              24, // 100%
+              24, // SISA TW
               "auto", "auto", "auto",  // Roda 2 P/M/K
               "auto", "auto", "auto",  // Roda 3
               "auto", "auto", "auto",  // Roda 4
@@ -908,8 +910,41 @@ document.addEventListener("DOMContentLoaded", async () => {
           },
         };
 
+        // === Blok tanda tangan ===
+        const tandaTangan = {
+          margin: [0, 30, 0, 0],
+          columns: [
+            { width: 550, text: "" }, // kolom kosong (kiri)
+            {
+              width: 'auto',
+              alignment: 'center',
+              stack: [
+                { text: "KEPALA UNIT PELAKSANA TEKNIS PELAYANAN PENDAPATAN DAERAH", bold: true },
+                { text: "PROVINSI KALIMANTAN TENGAH DI PALANGKA RAYA", bold: true, margin: [0, 0, 0, 5] },
+
+                // QR Code TTD
+                {
+                  qr: "MAYA MUSTIKA, SP., M.A.P.|NIP. 19730526 200312 2 001",
+                  fit: 70,
+                  margin: [0, 0, 0, 10]
+                },
+
+                { text: "MAYA MUSTIKA, SP., M.A.P.", bold: true },
+                { text: "NIP. 19730526 200312 2 001" }
+              ]
+            }
+          ]
+        };
+
+
+
         if (idx > 0) docDefinition.content.push({ text: "", pageBreak: "before" });
-        docDefinition.content.push(...buildPageHeader(tanggalLabel), tableObj);
+        // docDefinition.content.push(...buildPageHeader(tanggalLabel), tableObj);
+        docDefinition.content.push(
+          ...buildPageHeader(tanggalLabel),
+          tableObj,tandaTangan
+        );
+
       });
 
       return docDefinition;
@@ -923,8 +958,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     btn.addEventListener("click", () => {
       const docDefinition = buildDocDefinition();
+      const blnPdf = document.getElementById("bulan").value.padStart(2, "0");
       if (!docDefinition) return;
-      pdfMake.createPdf(docDefinition).download("Laporan_Realisasi_Pajak_F4.pdf");
+      pdfMake.createPdf(docDefinition).download(`Laporan_Realisasi_Bulan_${blnPdf}.pdf`);
     });
   })();
 });
