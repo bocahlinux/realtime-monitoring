@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!tr) {
       tr = document.createElement("tr");
       tr.id = id;
-      tr.className = "border-b hover:bg-blue-50 transition";
+      // tr.className = "border-b hover:bg-govgray transition";
       tr.innerHTML = html;
       tbody.prepend(tr);
     } else {
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     rtStatus.classList.remove("hidden");
     rtStatus.textContent = msg;
-    rtStatus.className = "ml-3 text-sm font-normal px-2 py-1 rounded-md border transition";
+    // rtStatus.className = "ml-3 text-sm font-normal px-2 py-1 rounded-md border transition";
 
     if (mode === "warn") rtStatus.classList.add("bg-yellow-50", "text-yellow-700", "border-yellow-300");
     if (mode === "error") rtStatus.classList.add("bg-red-50", "text-red-700", "border-red-300");
@@ -259,7 +259,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       .gte("tanggal", fromDate)
       .lte("tanggal", today)
       .eq("upt_bayar", "PALANGKA RAYA")
-      .order("paid_on", { ascending: false });
+      .order("paid_on", { ascending: true });
 
     if (error) {
       showStatus("Gagal memuat data awal: " + error.message, "error");

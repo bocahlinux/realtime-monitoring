@@ -1,79 +1,96 @@
 <!-- Sidebar -->
 <aside
   id="sidebar"
-  class="w-64 transition-all duration-300 bg-white shadow-lg h-screen sticky top-0 hidden md:flex flex-col overflow-hidden"
+  class="
+    hidden md:flex
+    flex-col
+    fixed md:sticky
+    top-[60px]
+    left-0
+    h-[calc(100vh-60px)]
+    w-64
+    bg-white dark:bg-govnavy dark:text-slate-100
+    shadow-lg
+    transition-all duration-300
+    overflow-y-auto
+    z-40
+  "
 >
-
-  <!-- Brand -->
-  <div class="p-4 border-b border-gray-200 flex items-center gap-3">
-    <img src="/assets/digilapor-icon.svg" id="sidebar-logo" 
-         class="w-10 h-10 transition-all duration-300">
-
-    <div id="sidebar-brand-text" class="sidebar-text transition-all duration-300">
-      <h1 class="text-2xl font-extrabold tracking-wide bg-gradient-to-r from-blue-700 to-indigo-600 
-                 text-transparent bg-clip-text">
-        DIGI LAPOR
-      </h1>
-    </div>
-  </div>
+  <div class="p-2"></div>
 
   <!-- MENU -->
   <nav class="mt-4 flex-1 overflow-y-auto">
-    <ul>
-
+    <ul class="space-y-1 text-sm">
       <li>
-        <a href="/"
-          class="flex items-center gap-3 px-5 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-700
-                 <%= activePage === 'dashboard' ? 'sidebar-active bg-blue-100 text-blue-700 font-semibold' : '' %>">
+        <a
+          href="/"
+          class="flex items-center gap-3 px-5 py-2 rounded-md
+                 text-gray-700 hover:bg-blue-100 hover:text-blue-700
+                 <%= activePage === 'dashboard' ? 'sidebar-active bg-blue-100 text-blue-700 font-semibold' : '' %>"
+        >
           <span class="sidebar-icon text-xl">🏠</span>
           <span class="sidebar-text">Dashboard</span>
         </a>
       </li>
 
       <li>
-        <a href="/laporan/realtime"
-          class="flex items-center gap-3 px-5 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-700
-                 <%= activePage === 'realtime' ? 'sidebar-active bg-blue-100 text-blue-700 font-semibold' : '' %>">
+        <a
+          href="/laporan/realtime"
+          class="flex items-center gap-3 px-5 py-2 rounded-md
+                 text-gray-700 hover:bg-blue-100 hover:text-blue-700
+                 <%= activePage === 'realtime' ? 'sidebar-active bg-blue-100 text-blue-700 font-semibold' : '' %>"
+        >
           <span class="sidebar-icon text-xl">📊</span>
           <span class="sidebar-text">Laporan Realtime</span>
         </a>
       </li>
 
       <li>
-        <a href="/laporan/rekap-bulanan"
-          class="flex items-center gap-3 px-5 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-700
-                 <%= activePage === 'rekap-bulanan' ? 'sidebar-active bg-blue-100 text-blue-700 font-semibold' : '' %>">
+        <a
+          href="/laporan/rekap-bulanan"
+          class="flex items-center gap-3 px-5 py-2 rounded-md
+                 text-gray-700 hover:bg-blue-100 hover:text-blue-700
+                 <%= activePage === 'rekap-bulanan' ? 'sidebar-active bg-blue-100 text-blue-700 font-semibold' : '' %>"
+        >
           <span class="sidebar-icon text-xl">📊</span>
           <span class="sidebar-text">Laporan Rekap</span>
         </a>
       </li>
 
       <li>
-        <a href="/transaksi/input-pap"
-          class="flex items-center gap-3 px-5 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-700
-                 <%= activePage === 'transaksi-pap' ? 'sidebar-active bg-blue-100 text-blue-700 font-semibold' : '' %>">
+        <a
+          href="/transaksi/input-pap"
+          class="flex items-center gap-3 px-5 py-2 rounded-md
+                 text-gray-700 hover:bg-blue-100 hover:text-blue-700
+                 <%= activePage === 'transaksi-pap' ? 'sidebar-active bg-blue-100 text-blue-700 font-semibold' : '' %>"
+        >
           <span class="sidebar-icon text-xl">📘</span>
           <span class="sidebar-text">Transaksi PAP</span>
         </a>
       </li>
 
       <li>
-        <a href="/transaksi/input-pab"
-          class="flex items-center gap-3 px-5 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-700
-                 <%= activePage === 'transaksi-pab' ? 'sidebar-active bg-blue-100 text-blue-700 font-semibold' : '' %>">
+        <a
+          href="/transaksi/input-pab"
+          class="flex items-center gap-3 px-5 py-2 rounded-md
+                 text-gray-700 hover:bg-blue-100 hover:text-blue-700
+                 <%= activePage === 'transaksi-pab' ? 'sidebar-active bg-blue-100 text-blue-700 font-semibold' : '' %>"
+        >
           <span class="sidebar-icon text-xl">📗</span>
           <span class="sidebar-text">Transaksi PAB</span>
         </a>
       </li>
 
       <li>
-        <a href="/pengaturan"
-          class="flex items-center gap-3 px-5 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-700">
+        <a
+          href="/pengaturan"
+          class="flex items-center gap-3 px-5 py-2 rounded-md
+                 text-gray-700 hover:bg-blue-100 hover:text-blue-700"
+        >
           <span class="sidebar-icon text-xl">⚙️</span>
           <span class="sidebar-text">Pengaturan</span>
         </a>
       </li>
-
     </ul>
   </nav>
 
@@ -83,5 +100,37 @@
       &copy; <%= new Date().getFullYear() %> IT SERVER BAPENDA KALTENG
     </p>
   </div>
-
 </aside>
+
+<script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("sidebar-overlay");
+
+    if (window.innerWidth < 768) {
+      sidebar.classList.toggle("sidebar-open");
+      overlay.classList.toggle("hidden");
+      return;
+    }
+
+    // Desktop mini mode
+    sidebar.classList.toggle("sidebar-mini");
+    document.querySelectorAll(".sidebar-text").forEach((el) => {
+      el.classList.toggle("hidden");
+    });
+    const logo = document.getElementById("sidebar-logo");
+    if (logo) logo.classList.toggle("scale-75");
+  }
+
+
+  // Optional: close sidebar on mobile when clicking outside
+  document.addEventListener("click", (e) => {
+    const sidebar = document.getElementById("sidebar");
+    const isSidebar = sidebar.contains(e.target);
+    const isToggle = e.target.closest("[onclick='toggleSidebar()']");
+
+    if (!isSidebar && !isToggle && window.innerWidth < 768) {
+      sidebar.classList.remove("sidebar-open");
+    }
+  });
+</script>

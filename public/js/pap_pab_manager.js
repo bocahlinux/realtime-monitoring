@@ -167,9 +167,9 @@ async function initPapPab(type) {
                     <input type="text" id="editJumlahDisplay" class="border p-2 w-full mb-3 rounded text-right" required>
                     <input type="hidden" id="editJumlah">
                     <label class="block text-sm mb-1">Keterangan</label>
-                    <textarea id="editKet" class="border p-2 w-full mb-3 rounded"></textarea>
+                    <textarea id="editKet" style="color: #111827 !important" class="border p-2 w-full mb-3 rounded"></textarea>
                     <div class="flex justify-end gap-2 mt-3">
-                        <button type="button" id="cancelEdit" class="bg-gray-300 px-3 py-1 rounded">Batal</button>
+                        <button type="button" id="cancelEdit" style="color: #111827 !important" class="bg-gray-300 px-3 py-1 rounded">Batal</button>
                         <button type="submit" class="bg-${color}-600 text-white px-3 py-1 rounded">Simpan</button>
                     </div>
                 </form>
@@ -179,7 +179,7 @@ async function initPapPab(type) {
 
     // --- TABEL DATA ---
     tableContainer.innerHTML = `
-        <div class="bg-white shadow rounded-lg overflow-x-auto">
+        <div class="overflow-x-auto bg-white dark:bg-govgray shadow rounded-lg p-4">
             <div class="p-4 flex flex-wrap gap-2 items-center justify-between">
                 <div class="flex gap-2 items-center">
                 <input type="date" id="filterTanggal" class="border p-2 rounded text-sm">
@@ -189,8 +189,8 @@ async function initPapPab(type) {
                 <div id="paginationInfo" class="text-sm text-gray-600"></div>
             </div>
 
-            <table class="min-w-full text-sm border border-gray-200">
-                <thead class="bg-${color}-100 text-${color}-800 font-semibold">
+            <table class="min-w-full text-xs sm:text-sm text-slate-700 dark:text-slate-100">
+                <thead class="bg-${color}-100 dark:bg-slate-900/70 text-${color}-800 dark:text-${color}-100 text-[11px] sm:text-xs uppercase">
                 <tr>
                     <th class="border p-2 text-left">Tanggal</th>
                     <th class="border p-2 text-left">UPT</th>
@@ -199,13 +199,17 @@ async function initPapPab(type) {
                     <th class="border p-2 text-center w-32">Aksi</th>
                 </tr>
                 </thead>
-                <tbody id="dataTableBody"></tbody>
+                <tbody id="dataTableBody" class="
+              divide-y divide-gray-100 dark:divide-slate-700
+              [&>tr:nth-child(even)]:bg-slate-50/60 dark:[&>tr:nth-child(even)]:bg-slate-800/40
+              [&>tr:hover]:bg-blue-50/80 dark:[&>tr:hover]:bg-slate-700/70
+            "></tbody>
             </table>
 
             <div class="flex justify-between items-center p-3 text-sm">
-                <button id="prevPage" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">⬅️ Sebelumnya</button>
+                <button id="prevPage" class="bg-gray-600 hover:bg-gray-800 px-3 py-1 rounded">⬅️ Sebelumnya</button>
                 <span id="pageInfo" class="text-gray-600"></span>
-                <button id="nextPage" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">Berikutnya ➡️</button>
+                <button id="nextPage" class="bg-gray-600 hover:bg-gray-800 px-3 py-1 rounded">Berikutnya ➡️</button>
             </div>
         </div>
     `;

@@ -1,59 +1,64 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-  <%- include('../partials/head', { title: title }) %>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.min.js"></script>
-</head>
-  <body class="bg-gray-50 min-h-screen">
-    <div class="flex">
+  <head>
+    <%- include('../partials/head', { title: title }) %>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.min.js"></script>
+  </head>
+
+  <body class="bg-gray-50 dark:bg-govdark min-h-screen text-slate-800 dark:text-slate-100">
+    <!-- NAVBAR -->
+    <%- include('../partials/navbar', { title: title }) %>
+
+    <!-- WRAPPER (SIDEBAR + CONTENT) -->
+    <div class="flex min-h-screen">
+
+      <!-- SIDEBAR -->
       <%- include('../partials/sidebar') %>
 
-      <div class="flex-1 flex flex-col">
-        <%- include('../partials/navbar', { title: title }) %>
-        <!-- Loading overlay -->
-        <div id="loading-overlay" class="hidden fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 flex flex-col items-center justify-center">
-          <div class="animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent"></div>
-          <p id="loading-text" class="text-white mt-3 text-sm font-medium">Memuat data, mohon tunggu</p>
-          <p id="loading-time" class="text-gray-300 mt-3 text-sm font-medium"></p>
-        </div>
-        <div id="progress-bar" class="hidden fixed top-0 left-0 h-1 bg-blue-500 z-50 transition-all duration-300 ease-linear"></div>
-
-        <main class="flex-1 p-6 space-y-6">
-          <div class="flex items-center space-x-2 mb-4">
-            <label for="bulan" class="text-sm font-medium text-gray-700">Bulan:</label>
-            <select id="bulan" class="border rounded p-1 text-sm">
-              <% const bulanList = [
-                "Januari","Februari","Maret","April","Mei","Juni",
-                "Juli","Agustus","September","Oktober","November","Desember"
-              ]; %>
-              <% bulanList.forEach((b, i) => { %>
-                <option value="<%= i+1 %>" <%= (i === new Date().getMonth()) ? 'selected' : '' %>><%= b %></option>
-              <% }) %>
-            </select>
-
-            <label for="tahun" class="text-sm font-medium text-gray-700 ml-2">Tahun:</label>
-            <select id="tahun" class="border rounded p-1 text-sm">
-              <% for (let y = 2023; y <= new Date().getFullYear()+1; y++) { %>
-                <option value="<%= y %>" <%= (y === new Date().getFullYear()) ? 'selected' : '' %>><%= y %></option>
-              <% } %>
-            </select>
-
-            <button id="btn-load" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition">
-              Tampilkan
-            </button>
-            <button id="btnExportPDF" class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition">
-              📄 Export PDF
-            </button>
-
-          </div>
-
-          <div id="rekap-wrapper" class="space-y-6">
-            <p class="text-gray-500 text-sm">Silahkan pilih bulan dan tahun, lalu klik <b>Tampilkan</b> untuk melihat laporan.</p>
-          </div>
-        </main>
+      <!-- Loading overlay -->
+      <div id="loading-overlay" class="hidden fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 flex flex-col items-center justify-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent"></div>
+        <p id="loading-text" class="text-white mt-3 text-sm font-medium">Memuat data, mohon tunggu</p>
+        <p id="loading-time" class="text-gray-300 mt-3 text-sm font-medium"></p>
       </div>
+      <div id="progress-bar" class="hidden fixed top-0 left-0 h-1 bg-blue-500 z-50 transition-all duration-300 ease-linear"></div>
+
+      <!-- CONTENT -->
+      <main class="flex-1  mt-[60px] w-full layout-container-separo px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
+        <div class="flex items-center space-x-2 mb-4">
+          <label for="bulan" class="text-sm font-medium text-gray-700">Bulan:</label>
+          <select id="bulan" class="border rounded p-1 text-sm">
+            <% const bulanList = [
+              "Januari","Februari","Maret","April","Mei","Juni",
+              "Juli","Agustus","September","Oktober","November","Desember"
+            ]; %>
+            <% bulanList.forEach((b, i) => { %>
+              <option value="<%= i+1 %>" <%= (i === new Date().getMonth()) ? 'selected' : '' %>><%= b %></option>
+            <% }) %>
+          </select>
+
+          <label for="tahun" class="text-sm font-medium text-gray-700 ml-2">Tahun:</label>
+          <select id="tahun" class="border rounded p-1 text-sm">
+            <% for (let y = 2023; y <= new Date().getFullYear()+1; y++) { %>
+              <option value="<%= y %>" <%= (y === new Date().getFullYear()) ? 'selected' : '' %>><%= y %></option>
+            <% } %>
+          </select>
+
+          <button id="btn-load" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition">
+            Tampilkan
+          </button>
+          <button id="btnExportPDF" class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition">
+            📄 Export PDF
+          </button>
+
+        </div>
+
+        <div id="rekap-wrapper" class="space-y-6">
+          <p class="text-gray-500 text-sm">Silahkan pilih bulan dan tahun, lalu klik <b>Tampilkan</b> untuk melihat laporan.</p>
+        </div>
+      </main>
     </div>
   <script src="/js/rekap-bulanan.js"></script>
 </body>

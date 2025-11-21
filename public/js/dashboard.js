@@ -303,7 +303,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         badgeText.textContent = "Turun";
         icon.setAttribute("data-lucide", "arrow-down-right");
       } else {
-        badge.classList.add("bg-gray-100", "text-gray-700");
+        badge.classList.add("bg-blue-100", "text-blue-700");
         badgeText.textContent = "Stabil";
         icon.setAttribute("data-lucide", "minus");
       }

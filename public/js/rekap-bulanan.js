@@ -465,9 +465,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             <h2 class="text-base font-semibold text-gray-700">
               Laporan Tanggal ${fmtTanggal(tgl)}
             </h2>
-            <div class="overflow-x-auto bg-white shadow rounded-lg">
-              <table class="min-w-full text-sm border-collapse border border-gray-200">
-                <thead class="bg-blue-100 text-blue-800 font-semibold">
+            <div class="overflow-x-auto bg-white dark:bg-govgray shadow rounded-lg p-4">
+              <table class="min-w-full text-xs sm:text-sm text-slate-700 dark:text-slate-100">
+                <thead class="bg-gray-100 dark:bg-slate-900/70 text-gray-600 dark:text-slate-100 text-[11px] sm:text-xs uppercase">
                   <tr>
                     <th rowspan="3" class="p-2 border">URAIAN</th>
                     <th rowspan="3" class="p-2 border">TARGET</th>
@@ -503,7 +503,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     ).join("")}
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody class="divide-y divide-gray-100 dark:divide-slate-700
+              [&>tr:nth-child(even)]:bg-slate-50/60 dark:[&>tr:nth-child(even)]:bg-slate-800/40
+              [&>tr:hover]:bg-blue-50/80 dark:[&>tr:hover]:bg-slate-700/70">
                   ${makeRow("PKB", sdhLalu.pkb, summary.pkb.induk, summary.pkb.samkel, sdhLalu.pkb + summary.pkb.pokok, target.target_pkb, true)}
                   ${makeRow("BBNKB", sdhLalu.bbnkb, summary.bbnkb.induk, summary.bbnkb.samkel, sdhLalu.bbnkb + summary.bbnkb.pokok, target.target_bbnkb)}
                   ${makeRow("PAP", sdhLalu.pap, 0, 0, sdhLalu.pap + summary.pap.pokok, target.target_pap)}
@@ -873,11 +875,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             headerRows: 3,
             widths: [
               28, // URAIAN
-              55, // TARGET
-              55, // PENERIMAAN S/D HARI LALU
-              55, // INDUK
+              50, // TARGET
+              50, // PENERIMAAN S/D HARI LALU
+              50, // INDUK
               40, // SAMKEL
-              55, // REALISASI S/D HARI INI
+              50, // REALISASI S/D HARI INI
               24, // 100%
               24, // SISA TW
               "auto", "auto", "auto",  // Roda 2 P/M/K

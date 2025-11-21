@@ -1,78 +1,126 @@
 <script src="https://unpkg.com/lucide@latest"></script>
+
 <!-- Navbar -->
-<header class="bg-[#0F1E4D] border-b border-blue-300 
-          text-white shadow-sm px-6 py-3 sticky top-0 flex items-center justify-between">
+<header class="fixed top-0 left-0 right-0 z-50
+        bg-[#0F1E4D] dark:bg-govnavy
+        border-b border-blue-300
+        text-white shadow-sm
+        px-6 py-3">
 
-  <div class="flex items-center gap-3">
-    <img src="/assets/digilapor-icon.svg" class="w-7 h-7">
-    <span class="text-lg font-semibold tracking-wide"><%= title %></span>
-  </div>
+  <div class="flex items-center justify-between w-full">
 
-  <!-- Right Side -->
-  <div class="relative flex items-center gap-3">
-
-    <!-- Avatar Trigger -->
-    <button id="avatarBtn"
-      class="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center font-semibold hover:bg-white/30 transition">
-      Y
-    </button>
-
-    <!-- Dropdown -->
-    <div id="dropdownMenu"
-      class="hidden absolute right-0 top-12 w-48 bg-white text-gray-700 rounded-lg shadow-xl 
-             border border-gray-200 overflow-hidden z-50 animate-fadeSlide">
-      
-      <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-        <p class="text-sm font-semibold">Yudha</p>
-        <p class="text-xs text-gray-500">Admin Sistem</p>
+    <!-- Brand + Page Title -->
+    <div class="brand-animate">
+      <!-- Logo -->
+      <div class="relative">
+        <img src="/assets/digilapor-icon-new.svg" class="w-8 h-8 brand-logo">
+        <div class="logo-dot"></div>
       </div>
 
-      <a href="/profil" class="block px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2">
-        <i data-lucide="user" class="w-4 h-4"></i> Profil
-      </a>
 
-      <a href="/pengaturan" class="block px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2">
-        <i data-lucide="settings" class="w-4 h-4"></i> Pengaturan
-      </a>
+      <!-- Text -->
+      <div class="leading-tight">
+        <div class="text-lg font-bold tracking-wide text-white brand-title">
+          DIGI LAPOR
+        </div>
+        <div class="text-[11px] text-blue-200 tracking-wide brand-sub">
+          Monitoring & Dashboard
+        </div>
+      </div>
 
-      <button type="submit"
-        class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
-        <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+      <!-- Page Title -->
+      <span class="text-sm md:ml-10 font-medium opacity-80">
+        <%= title %>
+      </span>
+    </div>
+
+
+    <!-- Right Tools -->
+    <div class="flex items-center gap-4">
+      
+      <!-- Dark mode toggle -->
+      <button
+        id="darkToggle"
+        class="p-2 rounded-md hover:bg-white/10 transition inline-flex items-center justify-center"
+        title="Toggle tema"
+      >
+        <i data-lucide="moon" class="w-5 h-5 icon-moon"></i>
+        <i data-lucide="sun"  class="w-5 h-5 icon-sun hidden"></i>
       </button>
 
+      <!-- Tanggal (muncul di layar >= sm) -->
+      <span id="current-date" class="hidden sm:inline text-xs text-blue-100"></span>
+
+      <!-- Avatar Trigger -->
+      <button
+        id="avatarBtn"
+        class="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center font-semibold
+              hover:bg-white/30 transition"
+      >
+        Y
+      </button>
+
+      <!-- Dropdown -->
+      <div
+        id="dropdownMenu"
+        class="hidden absolute right-0 top-11 w-48 bg-white text-gray-700 rounded-lg shadow-xl
+              border border-gray-200 overflow-hidden z-50 animate-fadeSlide"
+      >
+        <div class="px-4 py-3 bg-blue-500 border-b bg-govnavy">
+          <p class="text-sm text-green-300 font-semibold truncate">Yudha</p>
+          <p class="text-xs text-red-500 truncate">Admin Sistem</p>
+        </div>
+
+        <a href="/profil"
+          class="block px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2">
+          <i data-lucide="user" class="w-4 h-4"></i> Profil
+        </a>
+
+        <a href="/pengaturan"
+          class="block px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2">
+          <i data-lucide="settings" class="w-4 h-4"></i> Pengaturan
+        </a>
+
+        <a href="/auth/logout"
+          class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
+          <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+        </a>
+      </div>
     </div>
+
   </div>
 </header>
 
 
-
 <script>
-  // tampilkan tanggal hari ini di navbar
   document.addEventListener("DOMContentLoaded", () => {
+    // Tanggal
     const date = new Date();
     const opts = { year: "numeric", month: "long", day: "numeric" };
     const el = document.getElementById("current-date");
     if (el) {
       el.textContent = date.toLocaleDateString("id-ID", opts);
     }
-  });
 
-  document.addEventListener("DOMContentLoaded", () => {
+    // Dropdown avatar
     const avatarBtn = document.getElementById("avatarBtn");
     const dropdown = document.getElementById("dropdownMenu");
 
-    avatarBtn.addEventListener("click", () => {
-      dropdown.classList.toggle("hidden");
-    });
+    if (avatarBtn && dropdown) {
+      avatarBtn.addEventListener("click", () => {
+        dropdown.classList.toggle("hidden");
+      });
 
-    // klik di luar dropdown untuk menutup
-    document.addEventListener("click", (e) => {
-      if (!avatarBtn.contains(e.target) && !dropdown.contains(e.target)) {
-        dropdown.classList.add("hidden");
-      }
-    });
+      document.addEventListener("click", (e) => {
+        if (!avatarBtn.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.add("hidden");
+        }
+      });
+    }
+
+    // Aktivasi ikon lucide
+    if (window.lucide) {
+      lucide.createIcons();
+    }
   });
-  
-  lucide.createIcons(); // aktifkan ikon lucide di seluruh halaman
-
 </script>
