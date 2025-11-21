@@ -57,7 +57,7 @@ let data = [
 app.use("/auth", authRoutes);
 
 app.get("/", (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   res.render("dashboard", {
     title: "Dashboard",
     subtitle: "DASHBOARD",
@@ -76,7 +76,7 @@ app.get("/api/data", (req, res) => {
 });
 
 app.get("/config/supabase.json", (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   res.set("Cache-Control", "public, max-age=60");
   res.json({
       SUPABASE_URL: process.env.SUPABASE_URL,
@@ -88,7 +88,7 @@ app.get("/config/supabase.json", (req, res) => {
 });
 
 app.get("/laporan/realtime", (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   res.render("laporan/laporan_realtime", {
     title: "Laporan Realtime",
     subtitle: "REALTIME",
@@ -98,7 +98,7 @@ app.get("/laporan/realtime", (req, res) => {
 });
 
 app.get("/laporan/rekap-bulanan", (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   res.render("laporan/laporan_rekap_bulanan", {
     title: "Laporan Rekap",
     subtitle: "REKAP BULANAN",
@@ -108,7 +108,7 @@ app.get("/laporan/rekap-bulanan", (req, res) => {
 });
 
 app.get("/transaksi/input-pap", (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   res.render("transaksi/transaksi_pap", {
     title: "Transaksi PAP",
     subtitle: "TRANSAKSI PAP",
@@ -118,7 +118,7 @@ app.get("/transaksi/input-pap", (req, res) => {
 });
 
 app.get("/transaksi/input-pab", (req, res) => {
-  // if (!req.session.user) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
   res.render("transaksi/transaksi_pab", {
     title: "Transaksi PAB",
     subtitle: "TRANSAKSI PAB",
