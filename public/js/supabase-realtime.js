@@ -3,14 +3,14 @@
 document.addEventListener("DOMContentLoaded", async () => {
   // Ambil konfigurasi dari server tanpa membocorkan key di frontend
   const config = await fetch("/config/supabase.json").then((r) => r.json());
-  const { SUPABASE_URL, SUPABASE_ANON_KEY } = config;
+  const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = config;
 
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
     console.error("Konfigurasi Supabase tidak ditemukan!");
     return;
   }
 
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
   const tbody = document.querySelector("#data-table tbody");
   const elPBBN = document.getElementById("pokok-bbnkb");

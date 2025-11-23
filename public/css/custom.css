@@ -1,6 +1,55 @@
+body {
+  transition: bakcground 0.25s ease, color 0.25s ease;
+  font-family: "Poppins", sans-serif;
+}
+
 @keyframes fadeSlide {
   0%   { opacity: 0; transform: translateY(-6px); }
   100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ping-dot {
+  0% { transform: scale(0.8); opacity: 0.7; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.7; }
+}
+
+/* Logo: Fade + Scale */
+@keyframes brandLogo {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) rotate(-8deg);
+    filter: blur(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+/* Title Slide-In */
+@keyframes brandTitle {
+  0% {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Subtext Fade */
+@keyframes brandSub {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fadeSlide {
@@ -76,66 +125,28 @@
 }
 
 /* Brand Wrapper */
-  .brand-animate {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
+.brand-animate {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
 
-  /* Logo: Fade + Scale */
-  @keyframes brandLogo {
-    0% {
-      opacity: 0;
-      transform: scale(0.6) rotate(-8deg);
-      filter: blur(3px);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1) rotate(0deg);
-      filter: blur(0);
-    }
-  }
+/* Apply animations */
+.brand-logo {
+  animation: brandLogo 0.5s ease-out forwards;
+}
 
-  /* Title Slide-In */
-  @keyframes brandTitle {
-    0% {
-      opacity: 0;
-      transform: translateX(-12px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
+.brand-title {
+  animation: brandTitle 0.6s ease-out forwards;
+  letter-spacing: 0.5px;
 
-  /* Subtext Fade */
-  @keyframes brandSub {
-    0% {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+}
 
-  /* Apply animations */
-  .brand-logo {
-    animation: brandLogo 0.5s ease-out forwards;
-  }
+.brand-sub {
+  animation: brandSub 0.7s ease-out forwards;
+}
 
-  .brand-title {
-    animation: brandTitle 0.6s ease-out forwards;
-    letter-spacing: 0.5px;
-
-  }
-
-  .brand-sub {
-    animation: brandSub 0.7s ease-out forwards;
-  }
-
-  .logo-dot {
+.logo-dot {
   width: 7px;
   height: 7px;
   background: #ff4e4e;
@@ -146,15 +157,96 @@
   animation: ping-dot 1.4s infinite ease-in-out;
 }
 
-@keyframes ping-dot {
-  0% { transform: scale(0.8); opacity: 0.7; }
-  50% { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(0.8); opacity: 0.7; }
-}
-
 .brand-animate:hover .brand-logo {
   filter: drop-shadow(0 0 4px rgba(88,131,255,0.45));
   transform: scale(1.05);
   transition: 0.25s ease;
 }
 
+@keyframes fadeSlide {
+  0%   { opacity: 0; transform: translateY(-10px); }
+  10%  { opacity: 1; transform: translateY(0); }
+  90%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+.animate-fade-slide {
+  animation: fadeSlide 3s ease forwards;
+}
+
+/* Layout wrapper supaya konten nggak nempel pinggir di layar besar */
+  .layout-container {
+    width: 100%;
+    max-width: 1120px; /* ~max-w-5xl/6xl */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .layout-container-separo {
+    width: 100%;
+    max-width: 95%; /* ~max-w-5xl/6xl */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .layout-container-full {
+    width: 100%;
+    max-width: 100%; /* ~max-w-5xl/6xl */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #form-container p,
+  #form-container span,
+  #form-container textarea {
+    color: #111827 !important; /* gray-900 */
+  }
+
+  /* Background ala gov (dipakai di login / halaman khusus) */
+  .gov-bg {
+    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .gov-bg {
+      background: radial-gradient(circle at top, #020617 0%, #020617 60%);
+    }
+  }
+
+  #sidebar {
+    transition: width 0.3s ease, backdrop-filter 0.3s ease, background-color 0.25s ease;
+  }
+
+  #sidebar-logo {
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar-text {
+    transition: opacity 0.25s ease, transform 0.25s ease, color 0.25s ease;
+  }
+
+  @keyframes fadeSlide {
+    0%   { opacity: 0; transform: translateY(-6px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fadeSlide {
+    animation: fadeSlide .18s ease-out;
+  }
+
+  .sidebar-open {
+    transform: translateX(0) !important;
+  }
+  .sidebar-mini {
+    width: 64px !important;
+  }
+
+  @keyframes slideUp {
+  0%   { transform: translate(-50%, 20px); opacity: 0; }
+  10%  { transform: translate(-50%, 0); opacity: 1; }
+  90%  { transform: translate(-50%, 0); opacity: 1; }
+  100% { transform: translate(-50%, 20px); opacity: 0; }
+}
+
+.animate-snack {
+  animation: slideUp 3.2s ease forwards;
+}

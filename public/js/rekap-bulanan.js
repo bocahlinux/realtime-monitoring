@@ -87,7 +87,7 @@ function showLoading() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   const cfg = await fetch("/config/supabase.json").then(r => r.json());
-  const sb = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+  const sb = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_SERVICE_KEY);
 
   const bulanSelect = document.getElementById("bulan");
   const tahunSelect = document.getElementById("tahun");

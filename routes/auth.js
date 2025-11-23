@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const router = express.Router();
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 // const supabase = createClient(
 //   "https://YOUR_SUPABASE_URL.supabase.co",
 //   "YOUR_SUPABASE_ANON_KEY"

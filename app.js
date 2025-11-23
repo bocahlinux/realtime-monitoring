@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
+import profilRoutes from "./routes/profil.js";
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -55,6 +56,7 @@ let data = [
 ];
 
 app.use("/auth", authRoutes);
+app.use("/profil", profilRoutes);
 
 app.get("/", (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
@@ -65,6 +67,8 @@ app.get("/", (req, res) => {
     activePage: "dashboard",
   });
 });
+
+
 
 // API endpoint untuk update otomatis per hari
 app.get("/api/data", (req, res) => {
@@ -80,7 +84,7 @@ app.get("/config/supabase.json", (req, res) => {
   res.set("Cache-Control", "public, max-age=60");
   res.json({
       SUPABASE_URL: process.env.SUPABASE_URL,
-      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+      SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
       PORT: process.env.PORT || 3000,
       NODE_ENV: process.env.NODE_ENV || "development",
       SESSION_SECRET: process.env.SESSION_SECRET || "skjlkjIOJLKJL@J!!JLK<>???",

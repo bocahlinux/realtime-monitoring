@@ -5,23 +5,84 @@
 
 <link rel="icon" href="/favicon.ico" />
 
+<!-- SNACKBAR -->
+<div id="snackbar"
+     class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 px-6 py-3 rounded-lg shadow-xl
+            bg-gray-900 text-white z-[9999] min-w-[260px] max-w-[90%]
+            flex items-center justify-between gap-3 animate-snack">
+  <span id="snackbar-message" class="text-sm"></span>
+  <button onclick="hideSnackbar()" class="text-xs opacity-80 hover:opacity-100">Tutup</button>
+</div>
+
 <!-- Tailwind CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="/js/theme.js"></script>
- <script>
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            govdark: "#020617",   // background utama dark
-            govnavy: "#0F1E4D",   // navbar / sidebar
-            govgray: "#111827",   // card / panel
-          }
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          govdark: "#020617",   // background utama dark
+          govnavy: "#0F1E4D",   // navbar / sidebar
+          govgray: "#111827",   // card / panel
         }
       }
     }
- </script>
+  };
+  
+  function showToast(msg, type = "success") {
+    const toast = document.getElementById("toast");
+    const text = document.getElementById("toast-message");
+
+    text.textContent = msg;
+
+    // warna
+    if (type === "success") {
+      toast.classList.remove("bg-red-600");
+      toast.classList.add("bg-green-600");
+    } else {
+      toast.classList.remove("bg-green-600");
+      toast.classList.add("bg-red-600");
+    }
+
+    toast.classList.remove("hidden");
+
+    setTimeout(() => {
+      toast.classList.add("hidden");
+    }, 3000);
+  }
+
+  let snackbarTimer = null;
+
+  function showSnackbar(message, type = "success") {
+    const bar = document.getElementById("snackbar");
+    const msg = document.getElementById("snackbar-message");
+
+    msg.textContent = message;
+
+    // warna tema
+    if (type === "success") {
+      bar.classList.remove("bg-red-600");
+      bar.classList.add("bg-green-600");
+    } else {
+      bar.classList.remove("bg-green-600");
+      bar.classList.add("bg-red-600");
+    }
+
+    bar.classList.remove("hidden");
+
+    clearTimeout(snackbarTimer);
+    snackbarTimer = setTimeout(() => {
+      hideSnackbar();
+    }, 3200);
+  }
+
+  function hideSnackbar() {
+    const bar = document.getElementById("snackbar");
+    bar.classList.add("hidden");
+  }
+</script>
 
 <!-- Font -->
 <link
@@ -31,77 +92,3 @@
 
 <!-- Custom CSS (kalau ada) -->
 <link rel="stylesheet" href="/css/custom.css" />
-
-<style>
-  body {
-    transition: bakcground 0.25s ease, color 0.25s ease;
-    font-family: "Poppins", sans-serif;
-  }
-
-  /* Layout wrapper supaya konten nggak nempel pinggir di layar besar */
-  .layout-container {
-    width: 100%;
-    max-width: 1120px; /* ~max-w-5xl/6xl */
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .layout-container-separo {
-    width: 100%;
-    max-width: 95%; /* ~max-w-5xl/6xl */
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .layout-container-full {
-    width: 100%;
-    max-width: 100%; /* ~max-w-5xl/6xl */
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  #form-container p,
-  #form-container span,
-  #form-container textarea {
-    color: #111827 !important; /* gray-900 */
-  }
-
-  /* Background ala gov (dipakai di login / halaman khusus) */
-  .gov-bg {
-    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .gov-bg {
-      background: radial-gradient(circle at top, #020617 0%, #020617 60%);
-    }
-  }
-
-  #sidebar {
-    transition: width 0.3s ease, backdrop-filter 0.3s ease, background-color 0.25s ease;
-  }
-
-  #sidebar-logo {
-    transition: transform 0.3s ease;
-  }
-
-  .sidebar-text {
-    transition: opacity 0.25s ease, transform 0.25s ease, color 0.25s ease;
-  }
-
-  @keyframes fadeSlide {
-    0%   { opacity: 0; transform: translateY(-6px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
-
-  .animate-fadeSlide {
-    animation: fadeSlide .18s ease-out;
-  }
-
-  .sidebar-open {
-    transform: translateX(0) !important;
-  }
-  .sidebar-mini {
-    width: 64px !important;
-  }
-</style>

@@ -219,7 +219,7 @@ async function initPapPab(type) {
     const paginationInfo = document.getElementById("pageInfo");
 
     const cfg = await fetch("/config/supabase.json").then(r => r.json());
-    const sb = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+    const sb = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_SERVICE_KEY);
 
     let currentPage = 1;
     const perPage = 10;
@@ -301,10 +301,10 @@ async function initPapPab(type) {
         showConfirmToast("Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.", async () => {
             const { error } = await sb.from(tableName).delete().eq("id", id);
             if (error) {
-            showToast("❌ Gagal menghapus data!", "error");
+                showToast("❌ Gagal menghapus data!", "error");
             } else {
-            showToast("🗑️ Data berhasil dihapus", "success");
-            loadData();
+                showToast("🗑️ Data berhasil dihapus", "success");
+                loadData();
             }
         });
     };
