@@ -2,6 +2,18 @@
 <html lang="id">
     <head>
         <%- include('../partials/head') %>
+        <style>
+            .loader {
+                border: 2px solid #fff;
+                border-top: 2px solid transparent;
+                border-radius: 50%;
+                width: 14px;
+                height: 14px;
+                display: inline-block;
+                animation: spin 0.7s linear infinite;
+            }
+            @keyframes spin { 100% { transform: rotate(360deg); } }
+        </style>
     </head>
 
     <body class="bg-gray-50 dark:bg-govdark min-h-screen text-slate-800 dark:text-slate-100">
@@ -49,13 +61,34 @@
 
                         <div>
                             <label class="text-sm font-medium">UPT / Kabupaten</label>
-                            <select name="upt" required class="w-full mt-1 px-3 py-2 rounded-lg border dark:border-slate-700 dark:bg-slate-800">
-                                <% uptList.forEach(u => { %>
-                                <option value="<%= u.kabupatenName %>">
-                                    <%= u.kabupatenName %>
-                                </option>
-                                <% }) %>
-                            </select>
+                            <div class="relative mt-2">
+                                <input 
+                                    type="text"
+                                    id="uptSearch"
+                                    placeholder="Cari kabupaten..."
+                                    class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                                    oninput="filterUptOptions()"
+                                    onclick="toggleUptDropdown()"
+                                    autocomplete="off"
+                                />
+
+                                <!-- Dropdown -->
+                                <div id="uptDropdown" class="absolute mt-1 w-full bg-white border rounded-lg shadow-lg max-h-52 overflow-y-auto opacity-0 scale-95 transform transition-all duration-150 origin-top hidden z-50">
+                                    <% uptList.forEach(u => { %>
+                                        <div 
+                                        class="px-3 py-2 hover:bg-blue-100 cursor-pointer transition"
+                                        onclick="selectUpt('<%= u.kabupatenName %>')"
+                                        >
+                                        <%= u.kabupatenName %>
+                                        </div>
+                                    <% }) %>
+                                </div>
+
+
+                                <!-- REAL VALUE -->
+                                <input type="hidden" name="upt" id="uptValue" />
+                            </div>
+
                         </div>
 
                         <div class="flex items-end">
@@ -173,50 +206,76 @@
             </main>
         </div>
 
-        <div id="editModal" class="fixed inset-0 z-[2000] hidden bg-black/40 backdrop-blur-sm flex items-center justify-center">
-            <div class="bg-white dark:bg-slate-800 p-6 rounded-xl w-full max-w-md shadow-xl">
+        <div id="editModal" class="fixed inset-0 z-[2000] hidden bg-black/40 backdrop-blur-sm flex items-center justify-center transition-all duration-200">
+            <div id="editModalContent"
+                class="bg-white dark:bg-slate-800 p-6 rounded-xl w-full max-w-md 
+                        shadow-xl transform scale-95 opacity-0 transition-all duration-200">
 
-                <h3 class="text-lg font-semibold mb-4">Edit User</h3>
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <i data-lucide="user-cog" class="w-5 h-5"></i>
+                    Edit User
+                </h3>
 
                 <form id="editForm" method="POST">
+                    <div class="mb-3">
+                        <label class="text-sm font-medium">Nama</label>
+                        <input id="editNama" name="nama"
+                            class="w-full mt-1 px-3 py-2 rounded-lg border dark:border-slate-700 dark:bg-slate-900 focus:ring-2 focus:ring-blue-500"/>
+                    </div>
 
-                <div class="mb-3">
-                    <label class="text-sm font-medium">Nama</label>
-                    <input id="editNama" name="nama" class="w-full mt-1 px-3 py-2 rounded-lg border dark:border-slate-700 dark:bg-slate-900"/>
-                </div>
+                    <div class="mb-3">
+                        <label class="text-sm font-medium">Level</label>
+                        <select id="editLevel" name="level"
+                                class="w-full mt-1 px-3 py-2 rounded-lg border dark:border-slate-700 dark:bg-slate-900 focus:ring-2 focus:ring-blue-500">
+                            <option value="superadmin">Superadmin</option>
+                            <option value="admin">Admin</option>
+                            <option value="operator">Operator</option>
+                        </select>
+                    </div>
 
-                <div class="mb-3">
-                    <label class="text-sm font-medium">Level</label>
-                    <select id="editLevel" name="level" class="w-full mt-1 px-3 py-2 rounded-lg border dark:border-slate-700 dark:bg-slate-900">
-                    <option value="superadmin">Superadmin</option>
-                    <option value="admin">Admin</option>
-                    <option value="operator">Operator</option>
-                    </select>
-                </div>
+                    <!-- UPT Dropdown -->
+                    <div class="mb-3">
+                        <label class="text-sm font-medium">UPT</label>
+                        <div class="relative mt-2">
+                            <input id="editUptSearch"
+                                type="text"
+                                placeholder="Cari kabupaten..."
+                                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-slate-900"
+                                oninput="filterEditUptOptions()"
+                                onclick="toggleEditUptDropdown()"
+                                autocomplete="off"/>
 
-                <div class="mb-3">
-                    <label class="text-sm font-medium">UPT</label>
-                    <select id="editUPT" name="upt" class="w-full mt-1 px-3 py-2 rounded-lg border dark:border-slate-700 dark:bg-slate-900">
-                    <% uptList.forEach(u => { %>
-                        <option value="<%= u.kabupatenName %>"><%= u.kabupatenName %></option>
-                    <% }) %>
-                    </select>
-                </div>
+                            <div id="editUptDropdown"
+                                class="absolute mt-1 w-full bg-white dark:bg-slate-900 border rounded-lg shadow-lg 
+                                    max-h-52 overflow-y-auto hidden opacity-0 scale-95 origin-top
+                                    transition-all duration-150 z-50">
+                                <% uptList.forEach(u => { %>
+                                    <div class="px-3 py-2 hover:bg-blue-100 dark:hover:bg-slate-700 cursor-pointer transition edit-upt-option"
+                                        onclick="selectEditUpt('<%= u.kabupatenName %>')">
+                                        <%= u.kabupatenName %>
+                                    </div>
+                                <% }) %>
+                            </div>
 
-                <div class="flex justify-end gap-2 mt-4">
-                    <button type="button" onclick="closeEditModal()"
-                            class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg">
-                    Batal
-                    </button>
+                            <input type="hidden" id="editUptValue" name="upt"/>
+                        </div>
+                    </div>
 
-                    <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-                    Simpan
-                    </button>
-                </div>
+                    <div class="flex justify-end gap-2 mt-4">
+                        <button type="button" onclick="closeEditModal()"
+                                class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg">
+                            Batal
+                        </button>
 
+                        <button id="btnSaveEdit"
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2">
+                            <span>Simpan</span>
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
+
 
         <!-- SNACKBAR -->
         <script>
@@ -224,18 +283,170 @@
                 showSnackbar("<%= snackbar %>", "<%= snackbarType || 'success' %>");
             }
             function openEditModal(id, nama, level, upt) {
+                const modal = document.getElementById("editModal");
+                const content = document.getElementById("editModalContent");
+                
+                // Set data
                 document.getElementById("editNama").value = nama;
                 document.getElementById("editLevel").value = level;
-                document.getElementById("editUPT").value = upt;
+                document.getElementById("editUptSearch").value = upt || "";
+                document.getElementById("editUptValue").value = upt || "";
 
                 document.getElementById("editForm").action = `/superadmin/users/${id}/update`;
 
-                document.getElementById("editModal").classList.remove("hidden");
+                // Show modal
+                modal.classList.remove("hidden");
+
+                // Animasi fade + scale
+                setTimeout(() => {
+                    content.classList.remove("opacity-0", "scale-95");
+                    content.classList.add("opacity-100", "scale-100");
+                }, 10);
+
+                // Fokus otomatis ke input nama
+                setTimeout(() => document.getElementById("editNama").focus(), 150);
+            }
+
+            function showEditUptDropdown() {
+                const dd = document.getElementById("editUptDropdown");
+                dd.classList.remove("hidden");
+                requestAnimationFrame(() => {
+                    dd.classList.remove("opacity-0", "scale-95");
+                    dd.classList.add("opacity-100", "scale-100");
+                });
+            }
+
+            function hideEditUptDropdown() {
+                const dd = document.getElementById("editUptDropdown");
+                dd.classList.add("opacity-0", "scale-95");
+                dd.classList.remove("opacity-100", "scale-100");
+                setTimeout(() => dd.classList.add("hidden"), 120);
+            }
+
+            function toggleEditUptDropdown() {
+                const dd = document.getElementById("editUptDropdown");
+
+                if (dd.classList.contains("hidden")) {
+                    dd.classList.remove("hidden");
+                    setTimeout(() => {
+                        dd.classList.remove("opacity-0", "scale-95");
+                        dd.classList.add("opacity-100", "scale-100");
+                    }, 10);
+                } else {
+                    hideEditUptDropdown();
+                }
+            }
+
+            function filterEditUptOptions() {
+                const input = document.getElementById("editUptSearch").value.toLowerCase();
+                const items = document.querySelectorAll(".edit-upt-option");
+
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(input) ? "block" : "none";
+
+                    // highlight search
+                    if (input.length > 0) {
+                        item.innerHTML = item.textContent.replace(
+                            new RegExp(input, "gi"),
+                            match => `<span class="bg-yellow-200 dark:bg-yellow-600 text-black dark:text-white">${match}</span>`
+                        );
+                    } else {
+                        item.innerHTML = item.textContent;
+                    }
+                });
+            }
+
+            function selectEditUpt(value) {
+                document.getElementById("editUptSearch").value = value;
+                document.getElementById("editUptValue").value = value;
+                hideEditUptDropdown();
             }
 
             function closeEditModal() {
-                document.getElementById("editModal").classList.add("hidden");
+                const modal = document.getElementById("editModal");
+                const content = document.getElementById("editModalContent");
+
+                content.classList.add("opacity-0", "scale-95");
+                content.classList.remove("opacity-100", "scale-100");
+
+                setTimeout(() => modal.classList.add("hidden"), 150);
             }
+            
+            function showUptDropdown() {
+                const dd = document.getElementById("uptDropdown");
+                dd.classList.remove("hidden");
+
+                // Animasi open
+                requestAnimationFrame(() => {
+                    dd.classList.remove("opacity-0", "scale-95");
+                    dd.classList.add("opacity-100", "scale-100");
+                });
+            }
+
+            function hideUptDropdown() {
+                const dd = document.getElementById("uptDropdown");
+
+                // Animasi close
+                dd.classList.add("opacity-0", "scale-95");
+                dd.classList.remove("opacity-100", "scale-100");
+
+                // Tunggu animasi selesai, lalu hide
+                setTimeout(() => dd.classList.add("hidden"), 130);
+            }
+
+            function toggleUptDropdown() {
+                const dd = document.getElementById("uptDropdown");
+
+                if (dd.classList.contains("hidden")) {
+                    showUptDropdown();
+                } else {
+                    hideUptDropdown();
+                }
+            }
+
+            function filterUptOptions() {
+                const input = document.getElementById("uptSearch").value.toLowerCase();
+                const items = document.querySelectorAll("#uptDropdown > div");
+
+                items.forEach(item => {
+                    item.style.display = item.textContent.toLowerCase().includes(input)
+                    ? "block"
+                    : "none";
+                });
+            }
+
+            function selectUpt(value) {
+                document.getElementById("uptSearch").value = value;
+                document.getElementById("uptValue").value = value;
+                hideUptDropdown();
+            }
+
+            // close dropdown on outside click
+            
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") closeEditModal();
+            });
+
+            document.getElementById("btnSaveEdit").addEventListener("click", function () {
+                this.innerHTML = `<span class="loader"></span> Menyimpan...`;
+            });
+
+            /* Click outside close */
+            document.addEventListener("click", (e) => {
+                const modal = document.getElementById("editModal");
+                const content = document.getElementById("editModalContent");
+
+                if (!modal.classList.contains("hidden") && !content.contains(e.target) && !e.target.closest("button[onclick^='openEditModal']")) {
+                    closeEditModal();
+                }
+            });
+
+            document.addEventListener("click", (e) => {
+                if (!e.target.closest("#editUptDropdown") && !e.target.closest("#editUptSearch")) {
+                    hideEditUptDropdown();
+                }
+            });
         </script>
     </body>
 </html>
