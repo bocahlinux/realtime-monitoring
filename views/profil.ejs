@@ -4,8 +4,7 @@
     <%- include('partials/head', { title: title || "Profil Pengguna" }) %>
   </head>
 
-  <body class="bg-gray-50 dark:bg-govdark text-gray-800 dark:text-slate-100 min-h-screen">
-
+  <body class="bg-gray-50 dark:bg-govdark min-h-screen text-slate-800 dark:text-slate-100">
     <!-- NAVBAR -->
     <%- include('partials/navbar', { title: "Profil Pengguna" }) %>
 
@@ -15,12 +14,8 @@
       <%- include('partials/sidebar', { activePage: 'profil' }) %>
 
       <!-- MAIN -->
-      <main class="flex-1 md:ml-64 mt-[60px] p-6 space-y-6">
-
+      <main class="flex-1  mt-[60px] w-full layout-container-separo px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
         <h1 class="text-2xl font-bold">Profil Pengguna</h1>
-
-        
-
         <!-- Card Data Profil -->
         <section class="p-6 bg-white dark:bg-govgray rounded-xl shadow border border-slate-200 dark:border-slate-700">
 

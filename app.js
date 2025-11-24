@@ -4,25 +4,20 @@ import dotenv from "dotenv";
 
 import path from "path";
 import { fileURLToPath } from "url";
-import authRoutes from "./routes/auth.js";
+import { createClient } from "@supabase/supabase-js";
 import profilRoutes from "./routes/profil.js";
+import authRoutes from "./routes/auth.js";
+import superadminUserRoutes from "./routes/superadmin_users.js";
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
-
-// middleware keamanan ringan
-app.use((req, res, next) => {
-  res.setHeader("X-Frame-Options", "DENY");
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("X-XSS-Protection", "1; mode=block");
-  next();
-});
 
 app.use(
   session({
@@ -32,6 +27,48 @@ app.use(
     cookie: { maxAge: 1000 * 60 * 60 * 6 }, // 6 jam
   })
 );
+
+// middleware keamanan ringan
+app.use(async (req, res, next) => {
+  if (!req.session.user) {
+    res.locals.authUser = null;
+    return next();
+  }
+
+  // ambil nama kabupaten berdasarkan UPT FK
+  let kabupatenName = null;
+
+  if (req.session.user.upt) {
+    const { data } = await sb
+      .from("esamsat_upt")
+      .select(`
+        id,
+        nama,
+        kabupaten_id,
+        kabupaten:esamsat_kabupaten(name)
+      `)
+      .eq("nama", req.session.user.upt)
+      .single();
+
+    kabupatenName = data?.kabupaten?.name || null;
+  }
+
+  res.locals.authUser = {
+    ...req.session.user,
+    kabupatenName
+  };
+
+  next();
+});
+// app.use((req, res, next) => {
+//   res.setHeader("X-Frame-Options", "DENY");
+//   res.setHeader("X-Content-Type-Options", "nosniff");
+//   res.setHeader("X-XSS-Protection", "1; mode=block");
+//   res.locals.authUser = req.session.user || null;
+//   next();
+// });
+
+
 
 // Set EJS sebagai template engine
 app.set("view engine", "ejs");
@@ -57,6 +94,7 @@ let data = [
 
 app.use("/auth", authRoutes);
 app.use("/profil", profilRoutes);
+app.use("/superadmin", superadminUserRoutes);
 
 app.get("/", (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");

@@ -33,7 +33,7 @@ router.get("/", requireLogin, async (req, res) => {
 
   const { data, error } = await supabase
     .from("esamsat_users")
-    .select("username, nama, created_at")
+    .select("username, nama, created_at, level, upt")
     .eq("id", user.id)
     .single();
 
@@ -52,7 +52,8 @@ router.get("/", requireLogin, async (req, res) => {
     // user: req.session.user,
     activePage: "profil",
     snackbar,
-    snackbarType
+    snackbarType,
+    authUser: req.session.user,
   });
 });
 
