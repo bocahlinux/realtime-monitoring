@@ -8,6 +8,8 @@ import { createClient } from "@supabase/supabase-js";
 import profilRoutes from "./routes/profil.js";
 import authRoutes from "./routes/auth.js";
 import superadminUserRoutes from "./routes/superadmin_users.js";
+import adminUsersRoute from "./routes/admin_users.js";
+
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -92,10 +94,12 @@ let data = [
   },
 ];
 
-app.use("/auth", authRoutes);
-app.use("/profil", profilRoutes);
-app.use("/superadmin", superadminUserRoutes);
+app.use("/auth", authRoutes); //routing untuk autentikasi
+app.use("/profil", profilRoutes); //routing untuk profil
+app.use("/superadmin", superadminUserRoutes); //routing untuk manajemen user superadmin
+app.use("/admin/users", adminUsersRoute); //routing untuk manajemen user admin
 
+// Halaman Dashboard
 app.get("/", (req, res) => {
   if (!req.session.user) return res.redirect("/auth/login");
   res.render("dashboard", {
@@ -105,8 +109,6 @@ app.get("/", (req, res) => {
     activePage: "dashboard",
   });
 });
-
-
 
 // API endpoint untuk update otomatis per hari
 app.get("/api/data", (req, res) => {
