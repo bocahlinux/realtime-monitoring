@@ -47,13 +47,17 @@ app.use(async (req, res, next) => {
         id,
         nama,
         kabupaten_id,
-        kabupaten:esamsat_kabupaten(name)
+        kabupaten:esamsat_kabupaten!inner (
+          id,
+          name
+        )
       `)
       .eq("nama", req.session.user.upt)
       .single();
 
     kabupatenName = data?.kabupaten?.name || null;
   }
+
 
   res.locals.authUser = {
     ...req.session.user,
@@ -76,23 +80,6 @@ app.use(async (req, res, next) => {
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 // app.use(express.static(path.join(__dirname, "public")));
-// Simulasi data laporan pajak
-let data = [
-  {
-    uraian: "PKB",
-    target: 132193954500,
-    sdLalu: 50922752000,
-    hariIni: 87192400,
-    unit: { roda2: 28622, roda4: 973, online: 54 }
-  },
-  {
-    uraian: "BBN-KB",
-    target: 69528372000,
-    sdLalu: 57367100,
-    hariIni: 0,
-    unit: { roda2: 0, roda4: 0, online: 0 }
-  },
-];
 
 app.use("/auth", authRoutes); //routing untuk autentikasi
 app.use("/profil", profilRoutes); //routing untuk profil

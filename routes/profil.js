@@ -41,6 +41,33 @@ router.get("/", requireLogin, async (req, res) => {
     console.error("Supabase Fetch Error:", error);
   }
 
+  // ambil nama kabupaten berdasarkan UPT FK
+  let kabupatenName = null;
+
+  if (req.session.user.upt) {
+      const { data } = await supabase
+          .from("esamsat_upt")
+          .select(`
+          id,
+          nama,
+          kabupaten_id,
+          kabupaten:esamsat_kabupaten!inner (
+              id,
+              name
+          )
+          `)
+          .eq("nama", req.session.user.upt)
+          .single();
+
+      kabupatenName = data?.kabupaten?.name || null;
+  }
+
+
+  res.locals.authUser = {
+      ...req.session.user,
+      kabupatenName
+  };
+
   res.render("profil", {
     title: "Profil Pengguna",
     // user: data,
@@ -53,7 +80,7 @@ router.get("/", requireLogin, async (req, res) => {
     activePage: "profil",
     snackbar,
     snackbarType,
-    authUser: req.session.user,
+    // authUser: req.session.user,
   });
 });
 

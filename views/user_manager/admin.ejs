@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+    <head>
+        <%- include('../partials/head') %>
+    </head>
+
+    <body class="bg-gray-50 dark:bg-govdark min-h-screen text-slate-800 dark:text-slate-100">
+        <!-- NAVBAR -->
+        <%- include('../partials/navbar') %>
+
+        <div class="flex min-h-screen">
+            <!-- SIDEBAR -->
+            <%- include('../partials/sidebar', { activePage: 'admin-users', user: authUser }) %>
+
+            <!-- MAIN -->
+            <main class="flex-1  mt-[60px] w-full layout-container-separo px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
+
+                <h1 class="text-2xl font-bold mb-4">Manajemen User Operator</h1>
+                <p class="text-gray-600 mb-6">
+                    Anda hanya dapat mengelola <strong>Operator</strong> dalam UPT: 
+                    <span class="font-bold text-blue-700"><%= adminUpt %></span>
+                </p>
+
+                <!-- Tombol Tambah -->
+                <button onclick="openAddModal()"
+                    class="mb-4 px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700">
+                    + Tambah Operator
+                </button>
+
+                <!-- TABEL -->
+                <div class="bg-white shadow rounded-lg overflow-hidden">
+                    <table class="min-w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr class="text-left">
+                        <th class="p-3">Username</th>
+                        <th class="p-3">Nama</th>
+                        <th class="p-3">Status</th>
+                        <th class="p-3">Dibuat</th>
+                        <th class="p-3 w-48">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <% users.forEach(u => { %>
+                            <% const isAktif = u.status === true; %>
+                            <tr>
+                                <td class="p-3"><%= u.username %></td>
+                                <td class="p-3"><%= u.nama %></td>
+                                <td class="p-3">
+                                    <% if (isAktif) { %>
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Aktif</span>
+                                    <% } else { %>
+                                    <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">Nonaktif</span>
+                                    <% } %>
+                                </td>
+                                <td class="p-3"><%= new Date(u.created_at).toLocaleString('id-ID') %></td>
+
+                                <td class="p-3">
+                                    <div class="flex gap-2">
+
+                                    <button
+                                        onclick="openEditModal('<%= u.id %>', '<%= u.nama %>')"
+                                        class="px-3 py-1 bg-yellow-500 text-white rounded text-xs hover:bg-yellow-600">
+                                        Edit
+                                    </button>
+
+                                    <form action="/admin/users/<%= u.id %>/reset-password" method="POST">
+                                        <button class="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700">
+                                        Reset
+                                        </button>
+                                    </form>
+
+                                    <form action="/admin/users/<%= u.id %>/toggle-status" method="POST">
+                                        <input type="hidden" name="status" value="<%= isAktif ? 'false' : 'true' %>">
+                                        <button class="px-3 py-1 <%= isAktif ? 'bg-gray-500' : 'bg-green-600' %> text-white rounded text-xs">
+                                        <%= isAktif ? 'Nonaktif' : 'Aktifkan' %>
+                                        </button>
+                                    </form>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+        <!-- Modal Tambah -->
+        <div id="addModal" class="hidden fixed inset-0 flex items-center justify-center bg-black/40">
+            <div class="bg-white p-6 rounded-lg w-full max-w-md">
+                <h3 class="text-lg font-bold mb-4">Tambah Operator</h3>
+                <form action="/admin/users/create" method="POST">
+                <label>Username</label>
+                <input name="username" class="w-full mb-3 px-3 py-2 border rounded"/>
+
+                <label>Nama</label>
+                <input name="nama" class="w-full mb-3 px-3 py-2 border rounded"/>
+
+                <label>Password</label>
+                <input name="password" class="w-full mb-3 px-3 py-2 border rounded" type="password"/>
+
+                <p class="text-xs text-gray-500">UPT otomatis: <%= adminUpt %></p>
+
+                <div class="flex justify-end mt-4 gap-2">
+                    <button type="button" onclick="closeModal('addModal')" class="px-4 py-2 bg-gray-400 text-white rounded">Batal</button>
+                    <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">Simpan</button>
+                </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal Edit -->
+        <div id="editModal" class="hidden fixed inset-0 flex items-center justify-center bg-black/40">
+            <div class="bg-white p-6 rounded-lg w-full max-w-md">
+                <h3 class="text-lg font-bold mb-4">Edit Nama User</h3>
+                <form id="editForm" method="POST">
+
+                <label>Nama</label>
+                <input id="editNama" name="nama" class="w-full mb-3 px-3 py-2 border rounded"/>
+
+                <div class="flex justify-end mt-4 gap-2">
+                    <button type="button" onclick="closeModal('editModal')" class="px-4 py-2 bg-gray-400 text-white rounded">Batal</button>
+                    <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">Simpan</button>
+                </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            if (snackbar) {
+                showSnackbar("<%= snackbar %>", "<%= snackbarType || 'success' %>");
+            }
+
+            function openAddModal() {
+                document.getElementById("addModal").classList.remove("hidden");
+            }
+
+            function openEditModal(id, nama) {
+                document.getElementById("editNama").value = nama;
+                document.getElementById("editForm").action = `/admin/users/${id}/update`;
+                document.getElementById("editModal").classList.remove("hidden");
+            }
+
+            function closeModal(id) {
+                document.getElementById(id).classList.add("hidden");
+            }
+        </script>
+    </body>
+</html>
