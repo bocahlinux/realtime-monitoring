@@ -130,6 +130,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     // === Query data dari Supabase ===
     async function loadData() {
       try {
+        // === STEP FILTER TRANSAKSI BERDASARKAN UPT USER LOGIN ===
+        const userUPT = window.USER_UPT || "";
+
+        if (!userUPT) {
+          console.warn("UPT user tidak ditemukan di session");
+          return;
+        }
+        
         // === STEP 1: Ambil tabel UPT + kabupaten (join manual) ===
         const { data: uptList, error: uptError } = await sb
           .from("esamsat_upt")
@@ -138,7 +146,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             kabupaten_id,
             kabupaten:kabupaten_id (
               id,
-              name
+              name,
+              nama_kotakab
             )
           `)
           .neq("is_other", "True");
@@ -148,22 +157,19 @@ document.addEventListener("DOMContentLoaded", async () => {
           return;
         }
 
-        // === STEP 2: Filter UPT yang kabupatennya 'KOTA PALANGKA RAYA' ===
-        // Format uptList.x.kabupaten.name
-        const targetKabupaten = "KOTA PALANGKA RAYA";
-
-        const uptPalangka = uptList
-          .filter((u) => u.kabupaten && u.kabupaten.name === targetKabupaten)
+        // === STEP 2: Filter UPT berdasarkan KABUPATEN' ===
+        const checkUPT = uptList
+          .filter((u) => u.kabupaten && u.kabupaten.nama_kotakab === userUPT)
           .map((u) => u.nama);
 
-        console.log("UPT yang termasuk Palangka Raya:", uptPalangka);
+        console.log("UPT user saat ini:", userUPT);
 
-        if (uptPalangka.length === 0) {
-          console.warn("Tidak ditemukan UPT dengan kabupaten Kota Palangka Raya");
+        if (checkUPT.length === 0) {
+          console.warn(`Tidak ditemukan UPT ${userUPT} di daftar UPT`);
           return;
         }
 
-        // === STEP 3: Query transaksi dengan kondisi upt_bayar berada dalam list uptPalangka ===
+        // === STEP 3: Query transaksi dengan kondisi upt_bayar berada dalam list checkUPT ===
         const { data, error } = await sb
           .from("esamsat_tx_harian")
           .select(
@@ -181,7 +187,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               "pokok_sp3",
             ].join(",")
           )
-          .in("upt_bayar", uptPalangka)     // <-- FILTER DISINI
+          .in("upt_bayar", checkUPT)     // <-- FILTER DISINI
           .gte("tanggal", firstOfMonthStr)
           .lte("tanggal", todayStr);
 
@@ -203,7 +209,8 @@ document.addEventListener("DOMContentLoaded", async () => {
           const tgl = row.tanggal;
           const comp = calcComponents(row);
 
-          const upt = row.upt_bayar || "TIDAK TERISI";
+          // const upt = row.upt_bayar || "TIDAK TERISI";
+          const upt = row.upt_bayar?.trim() || "TIDAK TERISI";
           if (!unitMap[upt]) {
             unitMap[upt] = {
               nama_upt: upt,
